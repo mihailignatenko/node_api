@@ -26,8 +26,8 @@ app.get('/profiles/:id/friends', function(req, res) {
             res.send({
                 result: 'success',
                 err: '',
-                fields: fields,
-                //json: rows,
+                //fields: fields,
+                json: rows
                 //length: rows.length
             });
             connection.release();
@@ -125,8 +125,8 @@ app.get('/profiles/:id', function(req, res) {
             res.send({
                 result: 'success',
                 err: '',
-                fields: fields,
-                //json: rows,
+                //fields: fields,
+                json: rows
                 //length: rows.length
             });
             connection.release();
