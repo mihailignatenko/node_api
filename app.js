@@ -14,6 +14,11 @@ var express = require('express'),
 //      res.end('Boo');
 //    }
 //};
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "X-Requested-With");
+  next();
+});
 app.get('/profiles/:id/friends', function(req, res) {
     try {
     connectionpool.getConnection(function(err, connection) { 
@@ -21,8 +26,8 @@ app.get('/profiles/:id/friends', function(req, res) {
             res.send({
                 result: 'success',
                 err: '',
-                //fields: fields,
-                json: rows
+                fields: fields,
+                //json: rows,
                 //length: rows.length
             });
             connection.release();
@@ -113,38 +118,23 @@ app.delete('/:table/:id', function(req, res) {
 
 //------------------------------------------------------------------------------
 // Profiles
-app.get('/:profiles', function(req, res) {
-    connectionpool.getConnection(function(err, connection) {
-        if (err) {
-            console.error('CONNECTION error: ', err);
-            res.statusCode = 503;
+app.get('/profiles/:id', function(req, res) {
+    try {
+    connectionpool.getConnection(function(err, connection) { 
+        connection.query('SELECT * FROM Profiles WHERE id = '+req.params.id, req.params.id, function(err, rows, fields) {
             res.send({
-                result: 'error',
-                err: err.code
+                result: 'success',
+                err: '',
+                fields: fields,
+                //json: rows,
+                //length: rows.length
             });
-        } else {
-            connection.query('SELECT * FROM Profiles', req.params.id, function(err, rows, fields) {
-                if (err) {
-                    console.error(err);
-                    res.statusCode = 500;
-                    res.send({
-                        result: 'error',
-                        err: err.code
-                    });
-                }
-                res.send({
-                    result: 'success',
-                    err: '',
-                    //fields: fields,
-                    json: rows,
-                    //length: rows.length
-                });
-                connection.release();
-            });
-        }
+            connection.release();
+        });
     });
+    } catch(e) {
+        res.writeHead(err);
+    }    
 });
-
-
-app.listen(3001);
-console.log('Rest Demo Listening on port 3001');
+app.listen(8000);
+console.log('Rest Demo Listening on port 8000');
