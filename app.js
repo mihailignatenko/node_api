@@ -1,11 +1,8 @@
 var connect_params = require('./connect');
 var express = require('express'),
-        url = require("url"),
-        swagger = require("swagger-node-express"),
         app = express(),
         mysql = require('mysql'),
         connectionpool = mysql.createPool(connect_params.connection);
-swagger.setAppHandler(app);
 //---------------------------------------------------------------------
 var where_field =1;
 var order_field = 1;
