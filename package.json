@@ -1,0 +1,20 @@
+{
+    "name": "application-name",
+    "version": "0.0.1",
+    "main": "app.js",
+    "private": true,
+    "author": {
+        "name": "nowa",
+        "email": "aurum.gallente@gmail.com",
+        "url":  "nowa.me"
+    },
+    "dependencies": {
+        "express": ">= 3.3.x",
+        "mysql": ">= 0.2.x",
+        "swagger-node-express": "~2.0"
+    },
+    "engines": {
+        "node": ">= 0.10",
+        "npm": ">= 1.2"
+    }
+}
