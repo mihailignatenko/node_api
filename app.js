@@ -104,17 +104,10 @@ app.get('/events/:perpage/:page', function(req, res) {
     }    
 });
 //events/:id
-app.get('/events/:id', function(req, res) {
+app.get('/event/:id', function(req, res) {
     try {
     connectionpool.getConnection(function(err, connection) { 
-        connection.query('SELECT e. * , p.id AS user_id, p.FirstName, p.LastName, p.NickName, avatar.hash, avatar.ext'+
-        'FROM bx_events_main AS e'+
-        'LEFT JOIN Profiles AS p ON e.responsibleid = p.id'+
-        'LEFT JOIN bx_avatar_images ON bx_avatar_images.author_id = p.id'+
-        'LEFT JOIN bx_photos_main AS avatar ON bx_avatar_images.id = avatar.id'+
-        'LEFT JOIN bx_events_images ON e.id = bx_events_images.entry_id'+
-        'LEFT JOIN bx_photos_main AS images ON bx_events_images.media_id WHERE e.id='+req.params.id+
-        ' GROUP BY e.id', req.params.id, function(err, rows, fields){
+        connection.query('SELECT e. * , p.id AS user_id, p.FirstName, p.LastName, p.NickName, avatar.hash, avatar.ext FROM bx_events_main AS e LEFT JOIN Profiles AS p ON e.responsibleid = p.id LEFT JOIN bx_avatar_images ON bx_avatar_images.author_id = p.id LEFT JOIN bx_photos_main AS avatar ON bx_avatar_images.id = avatar.id LEFT JOIN bx_events_images ON e.id = bx_events_images.entry_id LEFT JOIN bx_photos_main AS images ON bx_events_images.media_id WHERE e.id='+req.params.id+' GROUP BY e.id', req.params.id, function(err, rows, fields){
             res.send({
                 result: 'success',
                 err: '',
