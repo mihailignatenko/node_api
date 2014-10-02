@@ -122,5 +122,27 @@ app.get('/event/:id', function(req, res) {
         res.writeHead(err);
     }    
 });
+//event's posts
+app.get('/event/:id/posts/:perpage/:page', function(req, res) {
+    try {
+    connectionpool.getConnection(function(err, connection) { 
+        connection.query('SELECT cmt.*, p.id, p.FirstName, p.LastName, p.NickName, avatar.hash, avatar.ext FROM `bx_events_cmts` as cmt LEFT JOIN Profiles as p ON cmt.cmt_author_id  = p.id LEFT JOIN bx_avatar_images ON bx_avatar_images.author_id = p.id LEFT JOIN bx_photos_main AS avatar ON bx_avatar_images.id = avatar.id  WHERE `cmt_object_id` = '+req.params.id+' LIMIT '+req.params.perpage*req.params.page + ', '+req.params.page, req.params.id, function(err, rows, fields){
+            res.send({
+                result: 'success',
+                err: '',
+                //fields: fields,
+                json: rows
+                //length: rows.length
+            });
+            connection.release();
+        });
+    });
+    } catch(e) {
+        res.writeHead(err);
+    }    
+});
+//comment for events
+//SELECT cmt.*, p.id, p.FirstName, p.LastName, p.NickName, avatar.hash, avatar.ext FROM `bx_events_cmts` as cmt LEFT JOIN Profiles as p ON cmt.cmt_author_id  = p.id LEFT JOIN bx_avatar_images ON bx_avatar_images.author_id = p.id LEFT JOIN bx_photos_main AS avatar ON bx_avatar_images.id = avatar.id  WHERE `cmt_object_id` = 1 
+
 app.listen(8000);
 console.log('Rest Demo Listening on port 8000');
