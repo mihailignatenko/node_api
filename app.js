@@ -16,6 +16,18 @@ app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Headers", "X-Requested-With");
   next();
 });
+// profile creation
+app.post('/register', function(request, response){
+    if(!(request.body.NickName) || !(request.body.password_confirm) || !(request.body.FirstName) || !(request.body.LastName) || !(request.body.Password) || !(request.body.Password===request.body.password_confirm)){
+        console.log('no requirements');
+    } else {
+        var NickName = Email = Password = Salt = Couple = Sex = LookingFor = Headline = DescriptionMe = Country = City = DateOfBirth = DateReg = Tags = zip = EmailNotify = Height = Weight = Income = Occupation = Religion = Education = RelationshipStatus = Hobbies = Interests = Ethnicity = FavoriteSites = FavoriteMusic = FavoriteFilms = FavoriteBooks = FirstName = LastName = FacebookProfile = "''";
+        var sql = "INSERT INTO `Profiles`(NickName, Email, Password, Salt, Couple, Sex, LookingFor, Headline, DescriptionMe, Country, City, DateOfBirth, DateReg, Tags, zip, EmailNotify, Height, Weight, Income, Occupation, Religion, Education, RelationshipStatus, Hobbies, Interests, Ethnicity, FavoriteSites, FavoriteMusic, FavoriteFilms, FavoriteBooks, FirstName, LastName, FacebookProfile) VALUES ("+NickName+", "+Email+", "+Password+", "+Salt+", "+Couple+", "+Sex+", "+LookingFor+", "+Headline+", "+DescriptionMe+", "+Country+", "+City+", "+DateOfBirth+", "+DateReg+", "+Tags+", "+zip+", "+EmailNotify+", "+Height+", "+Weight+", "+Income+", "+Occupation+", "+Religion+", "+Education+", "+RelationshipStatus+", "+Hobbies+", "+Interests+", "+Ethnicity+", "+FavoriteSites+", "+FavoriteMusic+", "+FavoriteFilms+", "+FavoriteBooks+", "+FirstName+", "+LastName+", "+FacebookProfile+")";
+        console.log(sql);
+        console.log(request.body);
+    }
+});
+// profile friends
 app.get('/profile/:id/friends', function(req, res) {
     try {
     connectionpool.getConnection(function(err, connection) { 
