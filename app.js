@@ -21,10 +21,29 @@ app.post('/register', function(request, response){
     if(!(request.body.NickName) || !(request.body.password_confirm) || !(request.body.FirstName) || !(request.body.LastName) || !(request.body.Password) || !(request.body.Password===request.body.password_confirm)){
         console.log('no requirements');
     } else {
+            try {
+            connectionpool.getConnection(function(err, connection) { 
+                connection.query("SELECT count(id) as count FROM Profiles WHERE NickName = '"+request.body.NickName+"'", request.body.NickName, function(err, rows, fields) {
+                    console.log(rows);
+                    response.send({
+                        result: 'success',
+                        err: '',
+                        //fields: fields,
+                        json: rows
+                        //length: rows.length
+                    });
+                    
+                    connection.release();
+                });
+            });
+            } catch(e) {
+                res.writeHead(err);
+            }         
+        
         var NickName = Email = Password = Salt = Couple = Sex = LookingFor = Headline = DescriptionMe = Country = City = DateOfBirth = DateReg = Tags = zip = EmailNotify = Height = Weight = Income = Occupation = Religion = Education = RelationshipStatus = Hobbies = Interests = Ethnicity = FavoriteSites = FavoriteMusic = FavoriteFilms = FavoriteBooks = FirstName = LastName = FacebookProfile = "''";
         var sql = "INSERT INTO `Profiles`(NickName, Email, Password, Salt, Couple, Sex, LookingFor, Headline, DescriptionMe, Country, City, DateOfBirth, DateReg, Tags, zip, EmailNotify, Height, Weight, Income, Occupation, Religion, Education, RelationshipStatus, Hobbies, Interests, Ethnicity, FavoriteSites, FavoriteMusic, FavoriteFilms, FavoriteBooks, FirstName, LastName, FacebookProfile) VALUES ("+NickName+", "+Email+", "+Password+", "+Salt+", "+Couple+", "+Sex+", "+LookingFor+", "+Headline+", "+DescriptionMe+", "+Country+", "+City+", "+DateOfBirth+", "+DateReg+", "+Tags+", "+zip+", "+EmailNotify+", "+Height+", "+Weight+", "+Income+", "+Occupation+", "+Religion+", "+Education+", "+RelationshipStatus+", "+Hobbies+", "+Interests+", "+Ethnicity+", "+FavoriteSites+", "+FavoriteMusic+", "+FavoriteFilms+", "+FavoriteBooks+", "+FirstName+", "+LastName+", "+FacebookProfile+")";
-        console.log(sql);
-        console.log(request.body);
+        //console.log(sql);
+        //console.log(request.body);
     }
 });
 // profile friends
