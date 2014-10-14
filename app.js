@@ -1,4 +1,5 @@
 var connect_params = require('./connect');
+var crypto = require('crypto');
 var express = require('express'),
         app = express(),
         mysql = require('mysql'),
@@ -8,6 +9,7 @@ var where_field =1;
 var order_field = 1;
 var limit;
 var offset;
+var boonex_modules = [];
 var bodyParser = require('body-parser');
 app.use( bodyParser.json());       // to support JSON-encoded bodies
 app.use( bodyParser.urlencoded() ); // to support URL-encoded bodies
@@ -16,23 +18,36 @@ app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Headers", "X-Requested-With");
   next();
 });
+function randomString(len, charSet) {
+    charSet = charSet || 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var randomString = '';
+    for (var i = 0; i < len; i++) {
+        var randomPoz = Math.floor(Math.random() * charSet.length);
+        randomString += charSet.substring(randomPoz,randomPoz+1);
+    }
+    return randomString;
+}
+connectionpool.getConnection(function(err, connection){
+    connection.query("SELECT * FROM `sys_modules`", null, function(err, rows){
+        //console.log(rows);
+        rows.forEach(function(row){
+           //boonex_modules.push(row.title);
+           boonex_modules[row.title] = row.title;
+        });
+    });
+        
+});
 // profile creation
 app.post('/register', function(request, response){
     if(!(request.body.NickName) || !(request.body.password_confirm) || !(request.body.FirstName) || !(request.body.LastName) || !(request.body.Password) || !(request.body.Password===request.body.password_confirm)){
         console.log('no requirements');
     } else {
+            var count;
             try {
             connectionpool.getConnection(function(err, connection) { 
-                connection.query("SELECT count(id) as count FROM Profiles WHERE NickName = '"+request.body.NickName+"'", request.body.NickName, function(err, rows, fields) {
-                    console.log(rows);
-                    response.send({
-                        result: 'success',
-                        err: '',
-                        //fields: fields,
-                        json: rows
-                        //length: rows.length
-                    });
-                    
+                connection.query("SELECT count(id) as count FROM Profiles WHERE NickName = "+mysql.escape(request.body.NickName), request.body.NickName, function(err, rows, fields) {
+                    //console.log(rows[0].count);
+                    count = rows[0].count;
                     connection.release();
                 });
             });
@@ -41,7 +56,25 @@ app.post('/register', function(request, response){
             }         
         
         var NickName = Email = Password = Salt = Couple = Sex = LookingFor = Headline = DescriptionMe = Country = City = DateOfBirth = DateReg = Tags = zip = EmailNotify = Height = Weight = Income = Occupation = Religion = Education = RelationshipStatus = Hobbies = Interests = Ethnicity = FavoriteSites = FavoriteMusic = FavoriteFilms = FavoriteBooks = FirstName = LastName = FacebookProfile = "''";
-        var sql = "INSERT INTO `Profiles`(NickName, Email, Password, Salt, Couple, Sex, LookingFor, Headline, DescriptionMe, Country, City, DateOfBirth, DateReg, Tags, zip, EmailNotify, Height, Weight, Income, Occupation, Religion, Education, RelationshipStatus, Hobbies, Interests, Ethnicity, FavoriteSites, FavoriteMusic, FavoriteFilms, FavoriteBooks, FirstName, LastName, FacebookProfile) VALUES ("+NickName+", "+Email+", "+Password+", "+Salt+", "+Couple+", "+Sex+", "+LookingFor+", "+Headline+", "+DescriptionMe+", "+Country+", "+City+", "+DateOfBirth+", "+DateReg+", "+Tags+", "+zip+", "+EmailNotify+", "+Height+", "+Weight+", "+Income+", "+Occupation+", "+Religion+", "+Education+", "+RelationshipStatus+", "+Hobbies+", "+Interests+", "+Ethnicity+", "+FavoriteSites+", "+FavoriteMusic+", "+FavoriteFilms+", "+FavoriteBooks+", "+FirstName+", "+LastName+", "+FacebookProfile+")";
+        NickName =mysql.escape(request.body.NIckName);
+        Email = mysql.escape(request.body.Email);
+        var Pass = crypto.createHash('md5').update(request.body.Password).digest('hex');
+        Salt = randomString(8);
+        Password = crypto.createHash('sha1').update(Pass+Salt).digest('hex');
+        //console.log(Password, Salt);
+        var sql = "INSERT INTO `Profiles`(NickName, Email, Password, Salt, Couple, Sex, LookingFor, Headline, DescriptionMe, Country, City, DateOfBirth, DateReg, Tags, zip, EmailNotify, Height, Weight, Income, Occupation, Religion, Education, RelationshipStatus, Hobbies, Interests, Ethnicity, FavoriteSites, FavoriteMusic, FavoriteFilms, FavoriteBooks, FirstName, LastName) VALUES ("+mysql.escape(request.body.NickName)+", "+mysql.escape(request.body.Email)+", "+Password+", "+Salt+", "+mysql.escape(request.body.Couple)+", "+mysql.escape(request.body.Sex)+", "+mysql.escape(request.body.LookingFor)+", "+mysql.escape(request.body.Headline)+", "+mysql.escape(request.body.DescriptionMe)+", "+mysql.escape(request.body.Country)+", "+mysql.escape(request.body.City)+", "+mysql.escape(request.body.DateOfBirth)+", "+mysql.escape(request.body.DateReg)+", "+mysql.escape(request.body.Tags)+", "+mysql.escape(request.body.zip)+", "+mysql.escape(request.body.EmailNotify)+", "+mysql.escape(request.body.Height)+", "+mysql.escape(request.body.Weight)+", "+mysql.escape(request.body.Income)+", "+mysql.escape(request.body.Occupation)+", "+mysql.escape(request.body.Religion)+", "+mysql.escape(request.body.Education)+", "+mysql.escape(request.body.RelationshipStatus)+", "+mysql.escape(request.body.Hobbies)+", "+mysql.escape(request.body.Interests)+", "+mysql.escape(request.body.Ethnicity)+", "+mysql.escape(request.body.FavoriteSites)+", "+mysql.escape(request.body.FavoriteMusic)+", "+mysql.escape(request.body.FavoriteFilms)+", "+mysql.escape(request.body.FavoriteBooks)+", "+mysql.escape(request.body.FirstName)+", "+mysql.escape(request.body.LastName)+")";
+        console.log(sql);
+            try {
+            connectionpool.getConnection(function(err, connection) { 
+                connection.query("SELECT count(id) as count FROM Profiles WHERE NickName = "+mysql.escape(request.body.NickName), request.body.NickName, function(err, rows, fields) {
+                    //console.log(rows[0].count);
+                    count = rows[0].count;
+                    connection.release();
+                });
+            });
+            } catch(e) {
+                res.writeHead(err);
+            }    
         //console.log(sql);
         //console.log(request.body);
     }
@@ -73,19 +106,51 @@ app.get('/profile/:id/friends', function(req, res) {
 //app.delete('/:table/:id', function(req, res) {
 //});
 
+
+// if FaceBook module installed
+function isFaceBook(){
+    if(boonex_modules['Facebook connect']){
+        return ' p.`FacebookProfile` ';
+    }
+    else return ' ';
+}
 //------------------------------------------------------------------------------
 // Profiles/:id
-app.get('/profile/:id', function(req, res) {
+app.get('/profile/:id', function(req, res) {    
     try {
-    connectionpool.getConnection(function(err, connection) { 
-        connection.query('SELECT p.`ID`, p.`NickName`, p.`Email`, p.`Status`, p.`Role`, p.`Couple`, p.`Sex`, p.`LookingFor`, p.`Headline`, p.`DescriptionMe`, p.`Country`, p.`City`, p.`DateOfBirth`, p.`Featured`, p.`DateReg`, p.`DateLastEdit`, p.`DateLastLogin`, p.`DateLastNav`, p.`aff_num`, p.`Tags`, p.`zip`, p.`EmailNotify`, p.`LangID`, p.`UpdateMatch`, p.`Views`, p.`Rate`, p.`RateCount`, p.`CommentsCount`, p.`PrivacyDefaultGroup`, p.`allow_view_to`, p.`UserStatus`, p.`UserStatusMessage`, p.`UserStatusMessageWhen`, p.`Avatar`, p.`Height`, p.`Weight`, p.`Income`, p.`Occupation`, p.`Religion`, p.`Education`, p.`RelationshipStatus`, p.`Hobbies`, p.`Interests`, p.`Ethnicity`, p.`FavoriteSites`, p.`FavoriteMusic`, p.`FavoriteFilms`, p.`FavoriteBooks`, p.`FirstName`, p.`LastName`, p.`FacebookProfile`, bx_photos_main.hash, bx_photos_main.ext FROM Profiles as p LEFT JOIN bx_avatar_images ON bx_avatar_images.author_id = p.id LEFT JOIN bx_photos_main ON bx_avatar_images.id = bx_photos_main.id  WHERE p.id = '+req.params.id, req.params.id, function(err, rows, fields) {
-            res.send({
-                result: 'success',
-                err: '',
-                //fields: fields,
-                json: rows
-                //length: rows.length
-            });
+    connectionpool.getConnection(function(err, connection) {
+        var fb = isFaceBook();
+        //console.log(fb);
+        console.log('SELECT p.`ID`, p.`NickName`, p.`Email`, p.`Status`, p.`Role`, p.`Couple`, p.`Sex`, p.`LookingFor`, p.`Headline`, p.`DescriptionMe`, '+fb+' p.`Country`, p.`City`, p.`DateOfBirth`, p.`Featured`, p.`DateReg`, p.`DateLastEdit`, p.`DateLastLogin`, p.`DateLastNav`, p.`aff_num`, p.`Tags`, p.`zip`, p.`EmailNotify`, p.`LangID`, p.`UpdateMatch`, p.`Views`, p.`Rate`, p.`RateCount`, p.`CommentsCount`, p.`PrivacyDefaultGroup`, p.`allow_view_to`, p.`UserStatus`, p.`UserStatusMessage`, p.`UserStatusMessageWhen`, p.`Avatar`, p.`Height`, p.`Weight`, p.`Income`, p.`Occupation`, p.`Religion`, p.`Education`, p.`RelationshipStatus`, p.`Hobbies`, p.`Interests`, p.`Ethnicity`, p.`FavoriteSites`, p.`FavoriteMusic`, p.`FavoriteFilms`, p.`FavoriteBooks`, p.`FirstName`, p.`LastName` FROM Profiles as p WHERE p.id = ');
+        
+        connection.query('SELECT p.`ID`, p.`NickName`, p.`Email`, p.`Status`, p.`Role`, p.`Couple`, p.`Sex`, p.`LookingFor`, p.`Headline`, p.`DescriptionMe`, '+' p.`Country`, p.`City`, p.`DateOfBirth`, p.`Featured`, p.`DateReg`, p.`DateLastEdit`, p.`DateLastLogin`, p.`DateLastNav`, p.`aff_num`, p.`Tags`, p.`zip`, p.`EmailNotify`, p.`LangID`, p.`UpdateMatch`, p.`Views`, p.`Rate`, p.`RateCount`, p.`CommentsCount`, p.`PrivacyDefaultGroup`, p.`allow_view_to`, p.`UserStatus`, p.`UserStatusMessage`, p.`UserStatusMessageWhen`, p.`Avatar`, p.`Height`, p.`Weight`, p.`Income`, p.`Occupation`, p.`Religion`, p.`Education`, p.`RelationshipStatus`, p.`Hobbies`, p.`Interests`, p.`Ethnicity`, p.`FavoriteSites`, p.`FavoriteMusic`, p.`FavoriteFilms`, p.`FavoriteBooks`, p.`FirstName`, p.`LastName` FROM Profiles as p WHERE p.id = '+req.params.id, req.params.id, function(err, rows, fields) {
+            var tmp = rows[0];
+//            res.send({
+//                result: 'success',
+//                err: '',
+//                //fields: fields
+//                json: rows
+//                //length: rows.length
+//            });            
+            if(boonex_modules['Avatar']){
+                console.log(1);
+                var sql = 'SELECT bx_photos_main.hash, bx_photos_main.ext FROM  bx_avatar_images,  bx_photos_main WHERE bx_avatar_images.id = bx_photos_main.id AND bx_avatar_images.author_id = ';
+                connection.query(sql+req.params.id, req.params.id, function(err, rows, fields){
+                    //console.log(tmp);
+                    tmp['avatar'] = rows;
+                    res.send({
+                        json: tmp
+                    });
+                });
+            } else {
+                res.send({
+                    result: 'success',
+                    err: '',
+                    //fields: fields
+                    json: rows
+                    //length: rows.length
+                });                 
+            }
             connection.release();
         });
     });
@@ -96,20 +161,56 @@ app.get('/profile/:id', function(req, res) {
 app.get('/profiles/:perpage/:page', function(req, res) {
     try {
     connectionpool.getConnection(function(err, connection) { 
-        connection.query('SELECT p.`ID`, p.`NickName`, p.`Email`, p.`Status`, p.`Role`, p.`Couple`, p.`Sex`, p.`LookingFor`, p.`Headline`, p.`DescriptionMe`, p.`Country`, p.`City`, p.`DateOfBirth`, p.`Featured`, p.`DateReg`, p.`DateLastEdit`, p.`DateLastLogin`, p.`DateLastNav`, p.`aff_num`, p.`Tags`, p.`zip`, p.`EmailNotify`, p.`LangID`, p.`UpdateMatch`, p.`Views`, p.`Rate`, p.`RateCount`, p.`CommentsCount`, p.`PrivacyDefaultGroup`, p.`allow_view_to`, p.`UserStatus`, p.`UserStatusMessage`, p.`UserStatusMessageWhen`, p.`Avatar`, p.`Height`, p.`Weight`, p.`Income`, p.`Occupation`, p.`Religion`, p.`Education`, p.`RelationshipStatus`, p.`Hobbies`, p.`Interests`, p.`Ethnicity`, p.`FavoriteSites`, p.`FavoriteMusic`, p.`FavoriteFilms`, p.`FavoriteBooks`, p.`FirstName`, p.`LastName`, p.`FacebookProfile`, bx_photos_main.hash, bx_photos_main.ext FROM Profiles as p LEFT JOIN bx_avatar_images ON bx_avatar_images.author_id = p.id LEFT JOIN bx_photos_main ON bx_avatar_images.id = bx_photos_main.id LIMIT '+req.params.perpage*req.params.page + ', '+req.params.page, req.params.id, function(err, rows, fields) {
-            res.send({
-                result: 'success',
-                err: '',
-                //fields: fields,
-                json: rows
-                //length: rows.length
-            });
-            connection.release();
+        connection.query("SELECT * FROM `sys_modules`", req.params.id, function(err, rows) {
+            //console.log(boonex_modules);
+            
+                //console.log(boonex_modules);
+            
+            if(false){
+                // connection.query('SELECT p.`ID`, p.`NickName`, p.`Email`, p.`Status`, p.`Role`, p.`Couple`, p.`Sex`, p.`LookingFor`, p.`Headline`, p.`DescriptionMe`, p.`Country`, p.`City`, p.`DateOfBirth`, p.`Featured`, p.`DateReg`, p.`DateLastEdit`, p.`DateLastLogin`, p.`DateLastNav`, p.`aff_num`, p.`Tags`, p.`zip`, p.`EmailNotify`, p.`LangID`, p.`UpdateMatch`, p.`Views`, p.`Rate`, p.`RateCount`, p.`CommentsCount`, p.`PrivacyDefaultGroup`, p.`allow_view_to`, p.`UserStatus`, p.`UserStatusMessage`, p.`UserStatusMessageWhen`, p.`Avatar`, p.`Height`, p.`Weight`, p.`Income`, p.`Occupation`, p.`Religion`, p.`Education`, p.`RelationshipStatus`, p.`Hobbies`, p.`Interests`, p.`Ethnicity`, p.`FavoriteSites`, p.`FavoriteMusic`, p.`FavoriteFilms`, p.`FavoriteBooks`, p.`FirstName`, p.`LastName`, p.`FacebookProfile`, bx_photos_main.hash, bx_photos_main.ext FROM Profiles as p LEFT JOIN bx_avatar_images ON bx_avatar_images.author_id = p.id LEFT JOIN bx_photos_main ON bx_avatar_images.id = bx_photos_main.id LIMIT '+req.params.perpage*req.params.page + ', '+req.params.page, req.params.id, function(err, rows, fields) 
+                
+                connection.query('SELECT p.`ID`, p.`NickName`, p.`Email`, p.`Status`, p.`Role`, p.`Couple`, p.`Sex`, p.`LookingFor`, p.`Headline`, p.`DescriptionMe`, p.`Country`, p.`City`, p.`DateOfBirth`, p.`Featured`, p.`DateReg`, p.`DateLastEdit`, p.`DateLastLogin`, p.`DateLastNav`, p.`aff_num`, p.`Tags`, p.`zip`, p.`EmailNotify`, p.`LangID`, p.`UpdateMatch`, p.`Views`, p.`Rate`, p.`RateCount`, p.`CommentsCount`, p.`PrivacyDefaultGroup`, p.`allow_view_to`, p.`UserStatus`, p.`UserStatusMessage`, p.`UserStatusMessageWhen`, p.`Avatar`, p.`Height`, p.`Weight`, p.`Income`, p.`Occupation`, p.`Religion`, p.`Education`, p.`RelationshipStatus`, p.`Hobbies`, p.`Interests`, p.`Ethnicity`, p.`FavoriteSites`, p.`FavoriteMusic`, p.`FavoriteFilms`, p.`FavoriteBooks`, p.`FirstName`, p.`LastName`, p.`FacebookProfile`, bx_photos_main.hash, bx_photos_main.ext FROM Profiles as p LEFT JOIN bx_avatar_images ON bx_avatar_images.author_id = p.id LEFT JOIN bx_photos_main ON bx_avatar_images.id = bx_photos_main.id LIMIT '+req.params.perpage*req.params.page + ', '+req.params.page, req.params.id, function(err, rows, fields){
+                    res.send({
+                        result: 'success',
+                        err: '',
+                        //fields: fields,
+                        json: rows
+                        //length: rows.length
+                    });                    
+                }); 
+            } else {
+                connection.query('SELECT p.`ID`, p.`NickName`, p.`Email`, p.`Status`, p.`Role`, p.`Couple`, p.`Sex`, p.`LookingFor`, p.`Headline`, p.`DescriptionMe`, p.`Country`, p.`City`, p.`DateOfBirth`, p.`Featured`, p.`DateReg`, p.`DateLastEdit`, p.`DateLastLogin`, p.`DateLastNav`, p.`aff_num`, p.`Tags`, p.`zip`, p.`EmailNotify`, p.`LangID`, p.`UpdateMatch`, p.`Views`, p.`Rate`, p.`RateCount`, p.`CommentsCount`, p.`PrivacyDefaultGroup`, p.`allow_view_to`, p.`UserStatus`, p.`UserStatusMessage`, p.`UserStatusMessageWhen`, p.`Avatar`, p.`Height`, p.`Weight`, p.`Income`, p.`Occupation`, p.`Religion`, p.`Education`, p.`RelationshipStatus`, p.`Hobbies`, p.`Interests`, p.`Ethnicity`, p.`FavoriteSites`, p.`FavoriteMusic`, p.`FavoriteFilms`, p.`FavoriteBooks`, p.`FirstName`, p.`LastName`, p.`FacebookProfile` FROM Profiles as p  LIMIT '+req.params.perpage*req.params.page + ', '+req.params.page, req.params.id, function(err, rows, fields){
+                    res.send({
+                        result: 'success',
+                        err: '',
+                        //fields: fields,
+                        json: rows
+                        //length: rows.length
+                    });                    
+                });                 
+            }
+            connection.release();       
         });
     });
     } catch(e) {
-        res.writeHead(err);
-    }    
+        
+    }       
+//    try {
+//    connectionpool.getConnection(function(err, connection) { 
+//        connection.query('SELECT p.`ID`, p.`NickName`, p.`Email`, p.`Status`, p.`Role`, p.`Couple`, p.`Sex`, p.`LookingFor`, p.`Headline`, p.`DescriptionMe`, p.`Country`, p.`City`, p.`DateOfBirth`, p.`Featured`, p.`DateReg`, p.`DateLastEdit`, p.`DateLastLogin`, p.`DateLastNav`, p.`aff_num`, p.`Tags`, p.`zip`, p.`EmailNotify`, p.`LangID`, p.`UpdateMatch`, p.`Views`, p.`Rate`, p.`RateCount`, p.`CommentsCount`, p.`PrivacyDefaultGroup`, p.`allow_view_to`, p.`UserStatus`, p.`UserStatusMessage`, p.`UserStatusMessageWhen`, p.`Avatar`, p.`Height`, p.`Weight`, p.`Income`, p.`Occupation`, p.`Religion`, p.`Education`, p.`RelationshipStatus`, p.`Hobbies`, p.`Interests`, p.`Ethnicity`, p.`FavoriteSites`, p.`FavoriteMusic`, p.`FavoriteFilms`, p.`FavoriteBooks`, p.`FirstName`, p.`LastName`, p.`FacebookProfile`, bx_photos_main.hash, bx_photos_main.ext FROM Profiles as p LEFT JOIN bx_avatar_images ON bx_avatar_images.author_id = p.id LEFT JOIN bx_photos_main ON bx_avatar_images.id = bx_photos_main.id LIMIT '+req.params.perpage*req.params.page + ', '+req.params.page, req.params.id, function(err, rows, fields) {
+//            res.send({
+//                result: 'success',
+//                err: '',
+//                //fields: fields,
+//                json: rows
+//                //length: rows.length
+//            });
+//            connection.release();
+//        });
+//    });
+//    } catch(e) {
+//        res.writeHead(err);
+//    }    
 });
 //events
 //SELECT e . * , p.id AS user_id, p.FirstName, p.LastName, p.NickName, avatar.hash, avatar.ext 
