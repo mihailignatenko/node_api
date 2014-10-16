@@ -87,10 +87,17 @@ app.post('/register', function(request, response){
                     //console.log(rows[0].count);
                     count = rows[0].count;
                     if(count<1){
-                        //console.log(count);
-                        connection.query(sql, request, response, function(rows){
-                            
+                        connectionpool.getConnection(function(err, connection, sql) {
+                            connection.query(sql, function(){
+                                
+                            });
                         });
+                    //console.log(rows[0].count);
+                    
+
+                    }
+                    else {
+                        console.log('no inserts');
                     }
                     connection.release();
                 });
