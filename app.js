@@ -80,6 +80,7 @@ app.post('/register', function(request, response){
                 connection.query("SELECT count(id) as count FROM Profiles WHERE NickName = "+mysql.escape(request.body.NickName), request.body.NickName, function(err, rows, fields, sql) {
                     console.log(sql);
                     count = rows[0].count;
+                    console.log(count);
                     if(count>0){
 //                        connectionpool.getConnection(function(err, connection, sql) {                            
 //                            connection.query(sql, function(){
