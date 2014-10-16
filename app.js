@@ -81,10 +81,10 @@ app.post('/register', function(request, response){
                     console.log(sql);
                     count = rows[0].count;
                     if(count>0){
-                        connectionpool.getConnection(function(err, connection, sql) {                            
-                            connection.query(sql, function(){
-                                
-                            });
+//                        connectionpool.getConnection(function(err, connection, sql) {                            
+//                            connection.query(sql, function(){
+//                                
+//                            });
                         });
                     }
                     else {
