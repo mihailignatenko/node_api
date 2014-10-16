@@ -39,7 +39,16 @@ function randomString(len, charSet) {
     }
     return randomString;
 }
-
+connectionpool.getConnection(function(err, connection){
+    connection.query("SELECT * FROM `sys_modules`", null, function(err, rows){
+        ////console.log(rows);
+        rows.forEach(function(row){
+           //boonex_modules.push(row.title);
+           boonex_modules[row.title] = row.title;
+        });
+    });
+        
+});
 // profile creation
 
 //comment for events
