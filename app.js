@@ -18,6 +18,14 @@ app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Headers", "X-Requested-With");
   next();
 });
+function nts(val){
+    if(val===NULL){
+        return '';
+    }
+    else {
+        return val;
+    }
+}
 function randomString(len, charSet) {
     charSet = charSet || 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     var randomString = '';
@@ -62,7 +70,7 @@ app.post('/register', function(request, response){
         Salt = randomString(8);
         Password = crypto.createHash('sha1').update(Pass+Salt).digest('hex');
         //console.log(Password, Salt);
-        var sql = "INSERT INTO `Profiles`(NickName, Email, Password, Salt, Couple, Sex, LookingFor, Headline, DescriptionMe, Country, City, DateOfBirth, DateReg, Tags, zip, EmailNotify, Height, Weight, Income, Occupation, Religion, Education, RelationshipStatus, Hobbies, Interests, Ethnicity, FavoriteSites, FavoriteMusic, FavoriteFilms, FavoriteBooks, FirstName, LastName) VALUES ("+mysql.escape(request.body.NickName)+", "+mysql.escape(request.body.Email)+", "+"'"+Password+"'"+", "+"'"+Salt+"'"+", "+mysql.escape(request.body.Couple)+", "+mysql.escape(request.body.Sex)+", "+mysql.escape(request.body.LookingFor)+", "+mysql.escape(request.body.Headline)+", "+mysql.escape(request.body.DescriptionMe)+", "+mysql.escape(request.body.Country)+", "+mysql.escape(request.body.City)+", "+mysql.escape(request.body.DateOfBirth)+", "+mysql.escape(request.body.DateReg)+", "+mysql.escape(request.body.Tags)+", "+mysql.escape(request.body.zip)+", "+mysql.escape(request.body.EmailNotify)+", "+mysql.escape(request.body.Height)+", "+mysql.escape(request.body.Weight)+", "+mysql.escape(request.body.Income)+", "+mysql.escape(request.body.Occupation)+", "+mysql.escape(request.body.Religion)+", "+mysql.escape(request.body.Education)+", "+mysql.escape(request.body.RelationshipStatus)+", "+mysql.escape(request.body.Hobbies)+", "+mysql.escape(request.body.Interests)+", "+mysql.escape(request.body.Ethnicity)+", "+mysql.escape(request.body.FavoriteSites)+", "+mysql.escape(request.body.FavoriteMusic)+", "+mysql.escape(request.body.FavoriteFilms)+", "+mysql.escape(request.body.FavoriteBooks)+", "+mysql.escape(request.body.FirstName)+", "+mysql.escape(request.body.LastName)+")";
+        var sql = "INSERT INTO `Profiles`(NickName, Email, Password, Salt, Couple, Sex, LookingFor, Headline, DescriptionMe, Country, City, DateOfBirth, DateReg, Tags, zip, EmailNotify, Height, Weight, Income, Occupation, Religion, Education, RelationshipStatus, Hobbies, Interests, Ethnicity, FavoriteSites, FavoriteMusic, FavoriteFilms, FavoriteBooks, FirstName, LastName) VALUES ("+mysql.escape(request.body.NickName)+", "+mysql.escape(request.body.Email)+", "+"'"+Password+"'"+", "+"'"+Salt+"'"+", "+nts(mysql.escape(request.body.Couple))+", "+nts(mysql.escape(request.body.Sex))+", "+nts(mysql.escape(request.body.LookingFor))+", "+nts(mysql.escape(request.body.Headline))+", "+nts(mysql.escape(request.body.DescriptionMe))+", "+nts(mysql.escape(request.body.Country))+", "+nts(mysql.escape(request.body.City))+", "+nts(mysql.escape(request.body.DateOfBirth))+", "+nts(mysql.escape(request.body.DateReg))+", "+nts(mysql.escape(request.body.Tags))+", "+nts(mysql.escape(request.body.zip))+", "+nts(mysql.escape(request.body.EmailNotify))+", "+nts(mysql.escape(request.body.Height))+", "+nts(mysql.escape(request.body.Weight))+", "+nts(mysql.escape(request.body.Income))+", "+nts(mysql.escape(request.body.Occupation))+", "+nts(mysql.escape(request.body.Religion))+", "+nts(mysql.escape(request.body.Education))+", "+nts(mysql.escape(request.body.RelationshipStatus))+", "+nts(mysql.escape(request.body.Hobbies))+", "+nts(mysql.escape(request.body.Interests))+", "+nts(mysql.escape(request.body.Ethnicity))+", "+nts(mysql.escape(request.body.FavoriteSites))+", "+nts(mysql.escape(request.body.FavoriteMusic))+", "+nts(mysql.escape(request.body.FavoriteFilms))+", "+nts(mysql.escape(request.body.FavoriteBooks))+", "+nts(mysql.escape(request.body.FirstName))+", "+nts(mysql.escape(request.body.LastName))+")";
         console.log(sql);
             res.send({
                 result: 'success',
