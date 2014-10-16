@@ -85,7 +85,7 @@ app.post('/register', function(request, response){
 //                            connection.query(sql, function(){
 //                                
 //                            });
-                        });
+//                        });
                     }
                     else {
                         console.log('no inserts');
