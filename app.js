@@ -21,9 +21,11 @@ app.use(function(req, res, next) {
 function nts(val){
     if(!val){
         return '';
+        conslole.log(1);
     }
     else {
         return val;
+        console.log(2);
     }
 }
 function randomString(len, charSet) {
