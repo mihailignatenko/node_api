@@ -78,7 +78,7 @@ app.post('/register', function(request, response){
             try {
             connectionpool.getConnection(function(err, connection, sql) { 
                 connection.query("SELECT count(id) as count FROM Profiles WHERE NickName = "+mysql.escape(request.body.NickName), request.body.NickName, function(err, rows, fields, sql) {
-                    console.log(sql);
+                    //console.log(sql);
                     count = rows[0].count;
                     console.log(count);
                     if(count>0){
@@ -156,7 +156,7 @@ app.get('/profile/:id', function(req, res) {
 //                //length: rows.length
 //            });            
             if(boonex_modules['Avatar']){
-                console.log(1);
+                //console.log(1);
                 var sql = 'SELECT bx_photos_main.hash, bx_photos_main.ext FROM  bx_avatar_images,  bx_photos_main WHERE bx_avatar_images.id = bx_photos_main.id AND bx_avatar_images.author_id = ';
                 connection.query(sql+req.params.id, req.params.id, function(err, rows, fields){
                     //console.log(tmp);
