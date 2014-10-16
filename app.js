@@ -11,6 +11,7 @@ var limit;
 var offset;
 var boonex_modules = [];
 var bodyParser = require('body-parser');
+var sql;
 app.use( bodyParser.json());       // to support JSON-encoded bodies
 app.use( bodyParser.urlencoded() ); // to support URL-encoded bodies
 app.use(function(req, res, next) {
@@ -73,18 +74,11 @@ app.post('/register', function(request, response){
         Password = crypto.createHash('sha1').update(Pass+Salt).digest('hex');
         //console.log(Password, Salt);
         var sql = "INSERT INTO `Profiles`(NickName, Email, Password, Salt, Couple, Sex, LookingFor, Headline, DescriptionMe, Country, City, DateOfBirth, DateReg, Tags, zip, EmailNotify, Height, Weight, Income, Occupation, Religion, Education, RelationshipStatus, Hobbies, Interests, Ethnicity, FavoriteSites, FavoriteMusic, FavoriteFilms, FavoriteBooks, FirstName, LastName) VALUES ("+mysql.escape(request.body.NickName)+", "+mysql.escape(request.body.Email)+", "+"'"+Password+"'"+", "+"'"+Salt+"'"+", "+mysql.escape(nts(request.body.Couple))+", "+mysql.escape(nts(request.body.Sex))+", "+mysql.escape(nts(request.body.LookingFor))+", "+mysql.escape(nts(request.body.Headline))+", "+mysql.escape(nts(request.body.DescriptionMe))+", "+mysql.escape(nts(request.body.Country))+", "+mysql.escape(nts(request.body.City))+", "+mysql.escape(nts(request.body.DateOfBirth))+", "+mysql.escape(nts(request.body.DateReg))+", "+mysql.escape(nts(request.body.Tags))+", "+mysql.escape(nts(request.body.zip))+", "+mysql.escape(nts(request.body.EmailNotify))+", "+mysql.escape(nts(request.body.Height))+", "+mysql.escape(nts(request.body.Weight))+", "+mysql.escape(nts(request.body.Income))+", "+mysql.escape(nts(request.body.Occupation))+", "+mysql.escape(nts(request.body.Religion))+", "+mysql.escape(nts(request.body.Education))+", "+mysql.escape(nts(request.body.RelationshipStatus))+", "+mysql.escape(nts(request.body.Hobbies))+", "+mysql.escape(nts(request.body.Interests))+", "+mysql.escape(nts(request.body.Ethnicity))+", "+mysql.escape(nts(request.body.FavoriteSites))+", "+mysql.escape(nts(request.body.FavoriteMusic))+", "+mysql.escape(nts(request.body.FavoriteFilms))+", "+mysql.escape(nts(request.body.FavoriteBooks))+", "+mysql.escape(nts(request.body.FirstName))+", "+mysql.escape(nts(request.body.LastName))+")";
-        console.log(sql);
-            response.send({
-                result: 'success',
-                err: '',
-                //fields: fields,
-                json: 'ok'
-                //length: rows.length
-            });         
+        console.log(sql);        
             try {
             connectionpool.getConnection(function(err, connection, sql) { 
                 connection.query("SELECT count(id) as count FROM Profiles WHERE NickName = "+mysql.escape(request.body.NickName), request.body.NickName, function(err, rows, fields, sql) {
-                    //console.log(rows[0].count);
+                    console.log(sql);
                     count = rows[0].count;
                     if(count>0){
                         connectionpool.getConnection(function(err, connection, sql) {                            
@@ -92,9 +86,6 @@ app.post('/register', function(request, response){
                                 
                             });
                         });
-                    //console.log(rows[0].count);
-                    
-
                     }
                     else {
                         console.log('no inserts');
