@@ -88,6 +88,9 @@ app.post('/register', function(request, response){
                     count = rows[0].count;
                     if(count<1){
                         //console.log(count);
+                        connection.query(sql, request, response, function(rows){
+                            
+                        });
                     }
                     connection.release();
                 });
