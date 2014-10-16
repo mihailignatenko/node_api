@@ -83,13 +83,12 @@ app.post('/register', function(request, response){
             });         
             try {
             connectionpool.getConnection(function(err, connection, sql) { 
-                connection.query("SELECT count(id) as count FROM Profiles WHERE NickName = "+mysql.escape(request.body.NickName), request.body.NickName, function(err, rows, fields) {
+                connection.query("SELECT count(id) as count FROM Profiles WHERE NickName = "+mysql.escape(request.body.NickName), request.body.NickName, function(err, rows, fields, sql) {
                     //console.log(rows[0].count);
                     count = rows[0].count;
                     if(count>0){
-                        connectionpool.getConnection(function(err, connection, sql) {
-                            
-                            connection.query(sql, function( ){
+                        connectionpool.getConnection(function(err, connection, sql) {                            
+                            connection.query(sql, function(){
                                 
                             });
                         });
