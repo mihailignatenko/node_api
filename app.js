@@ -12,6 +12,7 @@ var offset;
 var boonex_modules = [];
 var bodyParser = require('body-parser');
 var sql;
+//var sql = "INSERT INTO `Profiles`(NickName, Email, Password, Salt, Couple, Sex, LookingFor, Headline, DescriptionMe, Country, City, DateOfBirth, DateReg, Tags, zip, EmailNotify, Height, Weight, Income, Occupation, Religion, Education, RelationshipStatus, Hobbies, Interests, Ethnicity, FavoriteSites, FavoriteMusic, FavoriteFilms, FavoriteBooks, FirstName, LastName) VALUES ("+mysql.escape(request.body.NickName)+", "+mysql.escape(request.body.Email)+", "+"'"+Password+"'"+", "+"'"+Salt+"'"+", "+mysql.escape(nts(request.body.Couple))+", "+mysql.escape(nts(request.body.Sex))+", "+mysql.escape(nts(request.body.LookingFor))+", "+mysql.escape(nts(request.body.Headline))+", "+mysql.escape(nts(request.body.DescriptionMe))+", "+mysql.escape(nts(request.body.Country))+", "+mysql.escape(nts(request.body.City))+", "+mysql.escape(nts(request.body.DateOfBirth))+", "+mysql.escape(nts(request.body.DateReg))+", "+mysql.escape(nts(request.body.Tags))+", "+mysql.escape(nts(request.body.zip))+", "+mysql.escape(nts(request.body.EmailNotify))+", "+mysql.escape(nts(request.body.Height))+", "+mysql.escape(nts(request.body.Weight))+", "+mysql.escape(nts(request.body.Income))+", "+mysql.escape(nts(request.body.Occupation))+", "+mysql.escape(nts(request.body.Religion))+", "+mysql.escape(nts(request.body.Education))+", "+mysql.escape(nts(request.body.RelationshipStatus))+", "+mysql.escape(nts(request.body.Hobbies))+", "+mysql.escape(nts(request.body.Interests))+", "+mysql.escape(nts(request.body.Ethnicity))+", "+mysql.escape(nts(request.body.FavoriteSites))+", "+mysql.escape(nts(request.body.FavoriteMusic))+", "+mysql.escape(nts(request.body.FavoriteFilms))+", "+mysql.escape(nts(request.body.FavoriteBooks))+", "+mysql.escape(nts(request.body.FirstName))+", "+mysql.escape(nts(request.body.LastName))+")";
 app.use( bodyParser.json());       // to support JSON-encoded bodies
 app.use( bodyParser.urlencoded() ); // to support URL-encoded bodies
 app.use(function(req, res, next) {
@@ -26,7 +27,7 @@ function nts(val){
     }
     else {
         return val;
-        console.log(2);
+        //console.log(2);
     }
 }
 function randomString(len, charSet) {
@@ -40,7 +41,7 @@ function randomString(len, charSet) {
 }
 connectionpool.getConnection(function(err, connection){
     connection.query("SELECT * FROM `sys_modules`", null, function(err, rows){
-        //console.log(rows);
+        ////console.log(rows);
         rows.forEach(function(row){
            //boonex_modules.push(row.title);
            boonex_modules[row.title] = row.title;
@@ -49,16 +50,16 @@ connectionpool.getConnection(function(err, connection){
         
 });
 // profile creation
-app.post('/register', function(request, response){
+app.post('/register', function(request, response){   
     if(!(request.body.NickName) || !(request.body.password_confirm) || !(request.body.FirstName) || !(request.body.LastName) || !(request.body.Password) || !(request.body.Password===request.body.password_confirm)){
         console.log('no requirements');
     } else {
             var count;
             try {
             connectionpool.getConnection(function(err, connection) { 
-                connection.query("SELECT count(id) as count FROM Profiles WHERE NickName = "+mysql.escape(request.body.NickName), request.body.NickName, function(err, rows, fields) {
-                    //console.log(rows[0].count);
-                    count = rows[0].count;
+                connection.query("SELECT count(id) as count FROM Profiles WHERE NickName = "+mysql.escape(request.body.NickName), function(err, rows) {
+                    //console.log(rows);
+                    //count = rows[0].count;
                     connection.release();
                 });
             });
@@ -72,34 +73,54 @@ app.post('/register', function(request, response){
         var Pass = crypto.createHash('md5').update(request.body.Password).digest('hex');
         Salt = randomString(8);
         Password = crypto.createHash('sha1').update(Pass+Salt).digest('hex');
-        //console.log(Password, Salt);
+        ////console.log(Password, Salt);
         sql = "INSERT INTO `Profiles`(NickName, Email, Password, Salt, Couple, Sex, LookingFor, Headline, DescriptionMe, Country, City, DateOfBirth, DateReg, Tags, zip, EmailNotify, Height, Weight, Income, Occupation, Religion, Education, RelationshipStatus, Hobbies, Interests, Ethnicity, FavoriteSites, FavoriteMusic, FavoriteFilms, FavoriteBooks, FirstName, LastName) VALUES ("+mysql.escape(request.body.NickName)+", "+mysql.escape(request.body.Email)+", "+"'"+Password+"'"+", "+"'"+Salt+"'"+", "+mysql.escape(nts(request.body.Couple))+", "+mysql.escape(nts(request.body.Sex))+", "+mysql.escape(nts(request.body.LookingFor))+", "+mysql.escape(nts(request.body.Headline))+", "+mysql.escape(nts(request.body.DescriptionMe))+", "+mysql.escape(nts(request.body.Country))+", "+mysql.escape(nts(request.body.City))+", "+mysql.escape(nts(request.body.DateOfBirth))+", "+mysql.escape(nts(request.body.DateReg))+", "+mysql.escape(nts(request.body.Tags))+", "+mysql.escape(nts(request.body.zip))+", "+mysql.escape(nts(request.body.EmailNotify))+", "+mysql.escape(nts(request.body.Height))+", "+mysql.escape(nts(request.body.Weight))+", "+mysql.escape(nts(request.body.Income))+", "+mysql.escape(nts(request.body.Occupation))+", "+mysql.escape(nts(request.body.Religion))+", "+mysql.escape(nts(request.body.Education))+", "+mysql.escape(nts(request.body.RelationshipStatus))+", "+mysql.escape(nts(request.body.Hobbies))+", "+mysql.escape(nts(request.body.Interests))+", "+mysql.escape(nts(request.body.Ethnicity))+", "+mysql.escape(nts(request.body.FavoriteSites))+", "+mysql.escape(nts(request.body.FavoriteMusic))+", "+mysql.escape(nts(request.body.FavoriteFilms))+", "+mysql.escape(nts(request.body.FavoriteBooks))+", "+mysql.escape(nts(request.body.FirstName))+", "+mysql.escape(nts(request.body.LastName))+")";
-        console.log(sql);        
+        //console.log(sql);        
             try {
-            connectionpool.getConnection(function(err, connection, sql) { 
-                connection.query("SELECT count(id) as count FROM Profiles WHERE NickName = '"+mysql.escape(request.body.NickName)+"'", request.body.NickName, function(err, rows, fields, sql) {
-                    console.log("SELECT count(id) as count FROM Profiles WHERE NickName = '"+mysql.escape(request.body.NickName)+"'");
-                    count = rows[0].count;
-                    console.log(count);
-                    if(count>0){
-//                        connectionpool.getConnection(function(err, connection, sql) {                            
-//                            connection.query(sql, function(){
-//                                
-//                            });
-//                        });
+            connectionpool.getConnection(function(err, connection, sql) {
+                console.log(sql);
+                connection.query("SELECT count(id) as count FROM Profiles WHERE NickName = "+mysql.escape(request.body.NickName), request.body.NickName, function(err, rows, fields) {
+                    console.log(sql);
+                    var count = rows[0].count;
+                    //console.log(count);
+                    if(count==0){
+                        console.log('count printed');
+                        connectionpool.getConnection(function(err, connection, sql) {
+                            connection.query("INSERT INTO `Profiles`(NickName, Email, Password, Salt, Couple, Sex, LookingFor, Headline, DescriptionMe, Country, City, DateOfBirth, DateReg, Tags, zip, EmailNotify, Height, Weight, Income, Occupation, Religion, Education, RelationshipStatus, Hobbies, Interests, Ethnicity, FavoriteSites, FavoriteMusic, FavoriteFilms, FavoriteBooks, FirstName, LastName) VALUES ("+mysql.escape(request.body.NickName)+", "+mysql.escape(request.body.Email)+", "+"'"+Password+"'"+", "+"'"+Salt+"'"+", "+mysql.escape(nts(request.body.Couple))+", "+mysql.escape(nts(request.body.Sex))+", "+mysql.escape(nts(request.body.LookingFor))+", "+mysql.escape(nts(request.body.Headline))+", "+mysql.escape(nts(request.body.DescriptionMe))+", "+mysql.escape(nts(request.body.Country))+", "+mysql.escape(nts(request.body.City))+", "+mysql.escape(nts(request.body.DateOfBirth))+", "+mysql.escape(nts(request.body.DateReg))+", "+mysql.escape(nts(request.body.Tags))+", "+mysql.escape(nts(request.body.zip))+", "+mysql.escape(nts(request.body.EmailNotify))+", "+mysql.escape(nts(request.body.Height))+", "+mysql.escape(nts(request.body.Weight))+", "+mysql.escape(nts(request.body.Income))+", "+mysql.escape(nts(request.body.Occupation))+", "+mysql.escape(nts(request.body.Religion))+", "+mysql.escape(nts(request.body.Education))+", "+mysql.escape(nts(request.body.RelationshipStatus))+", "+mysql.escape(nts(request.body.Hobbies))+", "+mysql.escape(nts(request.body.Interests))+", "+mysql.escape(nts(request.body.Ethnicity))+", "+mysql.escape(nts(request.body.FavoriteSites))+", "+mysql.escape(nts(request.body.FavoriteMusic))+", "+mysql.escape(nts(request.body.FavoriteFilms))+", "+mysql.escape(nts(request.body.FavoriteBooks))+", "+mysql.escape(nts(request.body.FirstName))+", "+mysql.escape(nts(request.body.LastName))+")", request.body.NickName, function(err, rows, fields){
+                                //console.log("INSERT INTO `Profiles`(NickName, Email, Password, Salt, Couple, Sex, LookingFor, Headline, DescriptionMe, Country, City, DateOfBirth, DateReg, Tags, zip, EmailNotify, Height, Weight, Income, Occupation, Religion, Education, RelationshipStatus, Hobbies, Interests, Ethnicity, FavoriteSites, FavoriteMusic, FavoriteFilms, FavoriteBooks, FirstName, LastName) VALUES ("+mysql.escape(request.body.NickName)+", "+mysql.escape(request.body.Email)+", "+"'"+Password+"'"+", "+"'"+Salt+"'"+", "+mysql.escape(nts(request.body.Couple))+", "+mysql.escape(nts(request.body.Sex))+", "+mysql.escape(nts(request.body.LookingFor))+", "+mysql.escape(nts(request.body.Headline))+", "+mysql.escape(nts(request.body.DescriptionMe))+", "+mysql.escape(nts(request.body.Country))+", "+mysql.escape(nts(request.body.City))+", "+mysql.escape(nts(request.body.DateOfBirth))+", "+mysql.escape(nts(request.body.DateReg))+", "+mysql.escape(nts(request.body.Tags))+", "+mysql.escape(nts(request.body.zip))+", "+mysql.escape(nts(request.body.EmailNotify))+", "+mysql.escape(nts(request.body.Height))+", "+mysql.escape(nts(request.body.Weight))+", "+mysql.escape(nts(request.body.Income))+", "+mysql.escape(nts(request.body.Occupation))+", "+mysql.escape(nts(request.body.Religion))+", "+mysql.escape(nts(request.body.Education))+", "+mysql.escape(nts(request.body.RelationshipStatus))+", "+mysql.escape(nts(request.body.Hobbies))+", "+mysql.escape(nts(request.body.Interests))+", "+mysql.escape(nts(request.body.Ethnicity))+", "+mysql.escape(nts(request.body.FavoriteSites))+", "+mysql.escape(nts(request.body.FavoriteMusic))+", "+mysql.escape(nts(request.body.FavoriteFilms))+", "+mysql.escape(nts(request.body.FavoriteBooks))+", "+mysql.escape(nts(request.body.FirstName))+", "+mysql.escape(nts(request.body.LastName))+")");
+                            });
+                        });
+                        connectionpool.getConnection(function(err, connection, sql) {
+                            connection.query("SELECT id FROM Profiles WHERE NickName = "+mysql.escape(request.body.NickName), request.body.NickName, function(err, rows, fields){
+                                response.send({
+                                    result: 'success',
+                                    err: '',
+                                    //fields: fields,
+                                    json: rows
+                                    //length: rows.length
+                                });                                 
+                            });
+                        });                        
                     }
                     else {
-                        console.log('no inserts');
-                        console.log(count);
+                        response.send({
+                            result: 'success',
+                            err: '',
+                            //fields: fields,
+                            json: -1
+                            //length: rows.length
+                        });                        
                     }
+                    //console.log(count);
                     connection.release();
                 });
             });
             } catch(e) {
                 res.writeHead(err);
+                console.log(err);
             }    
-        //console.log(sql);
-        //console.log(request.body);
+        console.log('count = '+count);
+        ////console.log(request.body);
     }
 });
 // profile friends
@@ -143,8 +164,8 @@ app.get('/profile/:id', function(req, res) {
     try {
     connectionpool.getConnection(function(err, connection) {
         var fb = isFaceBook();
-        //console.log(fb);
-        console.log('SELECT p.`ID`, p.`NickName`, p.`Email`, p.`Status`, p.`Role`, p.`Couple`, p.`Sex`, p.`LookingFor`, p.`Headline`, p.`DescriptionMe`, '+fb+' p.`Country`, p.`City`, p.`DateOfBirth`, p.`Featured`, p.`DateReg`, p.`DateLastEdit`, p.`DateLastLogin`, p.`DateLastNav`, p.`aff_num`, p.`Tags`, p.`zip`, p.`EmailNotify`, p.`LangID`, p.`UpdateMatch`, p.`Views`, p.`Rate`, p.`RateCount`, p.`CommentsCount`, p.`PrivacyDefaultGroup`, p.`allow_view_to`, p.`UserStatus`, p.`UserStatusMessage`, p.`UserStatusMessageWhen`, p.`Avatar`, p.`Height`, p.`Weight`, p.`Income`, p.`Occupation`, p.`Religion`, p.`Education`, p.`RelationshipStatus`, p.`Hobbies`, p.`Interests`, p.`Ethnicity`, p.`FavoriteSites`, p.`FavoriteMusic`, p.`FavoriteFilms`, p.`FavoriteBooks`, p.`FirstName`, p.`LastName` FROM Profiles as p WHERE p.id = ');
+        ////console.log(fb);
+        //console.log('SELECT p.`ID`, p.`NickName`, p.`Email`, p.`Status`, p.`Role`, p.`Couple`, p.`Sex`, p.`LookingFor`, p.`Headline`, p.`DescriptionMe`, '+fb+' p.`Country`, p.`City`, p.`DateOfBirth`, p.`Featured`, p.`DateReg`, p.`DateLastEdit`, p.`DateLastLogin`, p.`DateLastNav`, p.`aff_num`, p.`Tags`, p.`zip`, p.`EmailNotify`, p.`LangID`, p.`UpdateMatch`, p.`Views`, p.`Rate`, p.`RateCount`, p.`CommentsCount`, p.`PrivacyDefaultGroup`, p.`allow_view_to`, p.`UserStatus`, p.`UserStatusMessage`, p.`UserStatusMessageWhen`, p.`Avatar`, p.`Height`, p.`Weight`, p.`Income`, p.`Occupation`, p.`Religion`, p.`Education`, p.`RelationshipStatus`, p.`Hobbies`, p.`Interests`, p.`Ethnicity`, p.`FavoriteSites`, p.`FavoriteMusic`, p.`FavoriteFilms`, p.`FavoriteBooks`, p.`FirstName`, p.`LastName` FROM Profiles as p WHERE p.id = ');
         
         connection.query('SELECT p.`ID`, p.`NickName`, p.`Email`, p.`Status`, p.`Role`, p.`Couple`, p.`Sex`, p.`LookingFor`, p.`Headline`, p.`DescriptionMe`, '+' p.`Country`, p.`City`, p.`DateOfBirth`, p.`Featured`, p.`DateReg`, p.`DateLastEdit`, p.`DateLastLogin`, p.`DateLastNav`, p.`aff_num`, p.`Tags`, p.`zip`, p.`EmailNotify`, p.`LangID`, p.`UpdateMatch`, p.`Views`, p.`Rate`, p.`RateCount`, p.`CommentsCount`, p.`PrivacyDefaultGroup`, p.`allow_view_to`, p.`UserStatus`, p.`UserStatusMessage`, p.`UserStatusMessageWhen`, p.`Avatar`, p.`Height`, p.`Weight`, p.`Income`, p.`Occupation`, p.`Religion`, p.`Education`, p.`RelationshipStatus`, p.`Hobbies`, p.`Interests`, p.`Ethnicity`, p.`FavoriteSites`, p.`FavoriteMusic`, p.`FavoriteFilms`, p.`FavoriteBooks`, p.`FirstName`, p.`LastName` FROM Profiles as p WHERE p.id = '+req.params.id, req.params.id, function(err, rows, fields) {
             var tmp = rows[0];
@@ -156,10 +177,10 @@ app.get('/profile/:id', function(req, res) {
 //                //length: rows.length
 //            });            
             if(boonex_modules['Avatar']){
-                //console.log(1);
+                ////console.log(1);
                 var sql = 'SELECT bx_photos_main.hash, bx_photos_main.ext FROM  bx_avatar_images,  bx_photos_main WHERE bx_avatar_images.id = bx_photos_main.id AND bx_avatar_images.author_id = ';
                 connection.query(sql+req.params.id, req.params.id, function(err, rows, fields){
-                    //console.log(tmp);
+                    ////console.log(tmp);
                     tmp['avatar'] = rows;
                     res.send({
                         json: tmp
@@ -185,9 +206,9 @@ app.get('/profiles/:perpage/:page', function(req, res) {
     try {
     connectionpool.getConnection(function(err, connection) { 
         connection.query("SELECT * FROM `sys_modules`", req.params.id, function(err, rows) {
-            //console.log(boonex_modules);
+            ////console.log(boonex_modules);
             
-                //console.log(boonex_modules);
+                ////console.log(boonex_modules);
             
             if(false){
                 // connection.query('SELECT p.`ID`, p.`NickName`, p.`Email`, p.`Status`, p.`Role`, p.`Couple`, p.`Sex`, p.`LookingFor`, p.`Headline`, p.`DescriptionMe`, p.`Country`, p.`City`, p.`DateOfBirth`, p.`Featured`, p.`DateReg`, p.`DateLastEdit`, p.`DateLastLogin`, p.`DateLastNav`, p.`aff_num`, p.`Tags`, p.`zip`, p.`EmailNotify`, p.`LangID`, p.`UpdateMatch`, p.`Views`, p.`Rate`, p.`RateCount`, p.`CommentsCount`, p.`PrivacyDefaultGroup`, p.`allow_view_to`, p.`UserStatus`, p.`UserStatusMessage`, p.`UserStatusMessageWhen`, p.`Avatar`, p.`Height`, p.`Weight`, p.`Income`, p.`Occupation`, p.`Religion`, p.`Education`, p.`RelationshipStatus`, p.`Hobbies`, p.`Interests`, p.`Ethnicity`, p.`FavoriteSites`, p.`FavoriteMusic`, p.`FavoriteFilms`, p.`FavoriteBooks`, p.`FirstName`, p.`LastName`, p.`FacebookProfile`, bx_photos_main.hash, bx_photos_main.ext FROM Profiles as p LEFT JOIN bx_avatar_images ON bx_avatar_images.author_id = p.id LEFT JOIN bx_photos_main ON bx_avatar_images.id = bx_photos_main.id LIMIT '+req.params.perpage*req.params.page + ', '+req.params.page, req.params.id, function(err, rows, fields) 
@@ -300,4 +321,4 @@ app.get('/event/:id/posts/:perpage/:page', function(req, res) {
 //SELECT cmt.*, p.id, p.FirstName, p.LastName, p.NickName, avatar.hash, avatar.ext FROM `bx_events_cmts` as cmt LEFT JOIN Profiles as p ON cmt.cmt_author_id  = p.id LEFT JOIN bx_avatar_images ON bx_avatar_images.author_id = p.id LEFT JOIN bx_photos_main AS avatar ON bx_avatar_images.id = avatar.id  WHERE `cmt_object_id` = 1 
 
 app.listen(8000);
-console.log('Rest Demo Listening on port 8000');
+//console.log('Rest Demo Listening on port 8000');
