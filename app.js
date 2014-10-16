@@ -19,7 +19,7 @@ app.use(function(req, res, next) {
   next();
 });
 function nts(val){
-    if(val===NULL){
+    if(!val){
         return '';
     }
     else {
