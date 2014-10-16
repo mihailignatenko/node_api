@@ -73,7 +73,7 @@ app.post('/register', function(request, response){
         Password = crypto.createHash('sha1').update(Pass+Salt).digest('hex');
         //console.log(Password, Salt);
         var sql = "INSERT INTO `Profiles`(NickName, Email, Password, Salt, Couple, Sex, LookingFor, Headline, DescriptionMe, Country, City, DateOfBirth, DateReg, Tags, zip, EmailNotify, Height, Weight, Income, Occupation, Religion, Education, RelationshipStatus, Hobbies, Interests, Ethnicity, FavoriteSites, FavoriteMusic, FavoriteFilms, FavoriteBooks, FirstName, LastName) VALUES ("+mysql.escape(request.body.NickName)+", "+mysql.escape(request.body.Email)+", "+"'"+Password+"'"+", "+"'"+Salt+"'"+", "+nts(mysql.escape(request.body.Couple))+", "+nts(mysql.escape(request.body.Sex))+", "+nts(mysql.escape(request.body.LookingFor))+", "+nts(mysql.escape(request.body.Headline))+", "+nts(mysql.escape(request.body.DescriptionMe))+", "+nts(mysql.escape(request.body.Country))+", "+nts(mysql.escape(request.body.City))+", "+nts(mysql.escape(request.body.DateOfBirth))+", "+nts(mysql.escape(request.body.DateReg))+", "+nts(mysql.escape(request.body.Tags))+", "+nts(mysql.escape(request.body.zip))+", "+nts(mysql.escape(request.body.EmailNotify))+", "+nts(mysql.escape(request.body.Height))+", "+nts(mysql.escape(request.body.Weight))+", "+nts(mysql.escape(request.body.Income))+", "+nts(mysql.escape(request.body.Occupation))+", "+nts(mysql.escape(request.body.Religion))+", "+nts(mysql.escape(request.body.Education))+", "+nts(mysql.escape(request.body.RelationshipStatus))+", "+nts(mysql.escape(request.body.Hobbies))+", "+nts(mysql.escape(request.body.Interests))+", "+nts(mysql.escape(request.body.Ethnicity))+", "+nts(mysql.escape(request.body.FavoriteSites))+", "+nts(mysql.escape(request.body.FavoriteMusic))+", "+nts(mysql.escape(request.body.FavoriteFilms))+", "+nts(mysql.escape(request.body.FavoriteBooks))+", "+nts(mysql.escape(request.body.FirstName))+", "+nts(mysql.escape(request.body.LastName))+")";
-        console.log(nts(mysql.escape(request.body.LookingFor)));
+        console.log((mysql.escape(nts(request.body.LookingFor))));
             response.send({
                 result: 'success',
                 err: '',
@@ -87,7 +87,7 @@ app.post('/register', function(request, response){
                     //console.log(rows[0].count);
                     count = rows[0].count;
                     if(count<1){
-                        console.log(count);
+                        //console.log(count);
                     }
                     connection.release();
                 });
