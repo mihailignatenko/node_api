@@ -86,9 +86,10 @@ app.post('/register', function(request, response){
                 connection.query("SELECT count(id) as count FROM Profiles WHERE NickName = "+mysql.escape(request.body.NickName), request.body.NickName, function(err, rows, fields) {
                     //console.log(rows[0].count);
                     count = rows[0].count;
-                    if(count<1){
+                    if(count>0){
                         connectionpool.getConnection(function(err, connection, sql) {
-                            connection.query(sql, function(){
+                            
+                            connection.query(sql, function( ){
                                 
                             });
                         });
@@ -98,6 +99,7 @@ app.post('/register', function(request, response){
                     }
                     else {
                         console.log('no inserts');
+                        console.log(count);
                     }
                     connection.release();
                 });
