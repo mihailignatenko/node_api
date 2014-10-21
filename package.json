@@ -17,8 +17,7 @@
     "finalhandler": "~0.3.0",
     "0.10.0": "~0.10.0",
     "cookie-parser": ">=2.0.2",
-    "cookies": ">=2.0.2",
-    "sync": "2.0.2"
+    "cookies": ">=2.0.2"
   },
   "engines": {
     "node": ">= 0.10",

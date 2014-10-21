@@ -1,4 +1,27 @@
 var mysql = require('mysql');
+var crypto = require('crypto');
+
+function randomString(len, charSet) {
+    charSet = charSet || 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var randomString = '';
+    for (var i = 0; i < len; i++) {
+        var randomPoz = Math.floor(Math.random() * charSet.length);
+        randomString += charSet.substring(randomPoz, randomPoz + 1);
+    }
+    return randomString;
+}
+
+function nts(val) {
+    if (typeof val === 'undefined') {
+        return '';
+        conslole.log(1);
+    }
+    else {
+        return val;
+        //console.log(2);
+    }
+}
+
 module.exports = function(connectionPool, boonex_modules) {
     return {
         get: {
@@ -89,6 +112,80 @@ module.exports = function(connectionPool, boonex_modules) {
                     });
                 } catch (e) {
                     res.writeHead(err);
+                }
+            }
+        },
+        post: {
+            register: function (request, response) {
+                if (!(request.body.NickName) || !(request.body.password_confirm) || !(request.body.FirstName) || !(request.body.LastName) || !(request.body.Password) || !(request.body.Email) || !(request.body.Password === request.body.password_confirm)) {
+                    console.log('no requirements');
+                } else {
+                    var count;
+                    try {
+                        connectionPool.getConnection(function (err, connection) {
+                            connection.query("SELECT count(id) as count FROM Profiles WHERE NickName = " + mysql.escape(request.body.NickName), function (err, rows) {
+//console.log(rows);
+//count = rows[0].count;
+                                connection.release();
+                            });
+                        });
+                    } catch (e) {
+                        res.writeHead(err);
+                    }
+                    var NickName = Email = Password = Salt = Couple = Sex = LookingFor = Headline = DescriptionMe = Country = City = DateOfBirth = DateReg = Tags = zip = EmailNotify = Height = Weight = Income = Occupation = Religion = Education = RelationshipStatus = Hobbies = Interests = Ethnicity = FavoriteSites = FavoriteMusic = FavoriteFilms = FavoriteBooks = FirstName = LastName = FacebookProfile = "''";
+                    NickName = mysql.escape(request.body.NIckName);
+                    Email = mysql.escape(request.body.Email);
+                    var Pass = crypto.createHash('md5').update(request.body.Password).digest('hex');
+                    Salt = randomString(8);
+                    Password = crypto.createHash('sha1').update(Pass + Salt).digest('hex');
+////console.log(Password, Salt);
+                    sql = "INSERT INTO `Profiles`(NickName, Email, Password, Salt, Couple, Sex, LookingFor, Headline, DescriptionMe, Country, City, DateOfBirth, DateReg, Tags, zip, EmailNotify, Height, Weight, Income, Occupation, Religion, Education, RelationshipStatus, Hobbies, Interests, Ethnicity, FavoriteSites, FavoriteMusic, FavoriteFilms, FavoriteBooks, FirstName, LastName) VALUES (" + mysql.escape(request.body.NickName) + ", " + mysql.escape(request.body.Email) + ", " + "'" + Password + "'" + ", " + "'" + Salt + "'" + ", " + mysql.escape(nts(request.body.Couple)) + ", " + mysql.escape(nts(request.body.Sex)) + ", " + mysql.escape(nts(request.body.LookingFor)) + ", " + mysql.escape(nts(request.body.Headline)) + ", " + mysql.escape(nts(request.body.DescriptionMe)) + ", " + mysql.escape(nts(request.body.Country)) + ", " + mysql.escape(nts(request.body.City)) + ", " + mysql.escape(nts(request.body.DateOfBirth)) + ", " + mysql.escape(nts(request.body.DateReg)) + ", " + mysql.escape(nts(request.body.Tags)) + ", " + mysql.escape(nts(request.body.zip)) + ", " + mysql.escape(nts(request.body.EmailNotify)) + ", " + mysql.escape(nts(request.body.Height)) + ", " + mysql.escape(nts(request.body.Weight)) + ", " + mysql.escape(nts(request.body.Income)) + ", " + mysql.escape(nts(request.body.Occupation)) + ", " + mysql.escape(nts(request.body.Religion)) + ", " + mysql.escape(nts(request.body.Education)) + ", " + mysql.escape(nts(request.body.RelationshipStatus)) + ", " + mysql.escape(nts(request.body.Hobbies)) + ", " + mysql.escape(nts(request.body.Interests)) + ", " + mysql.escape(nts(request.body.Ethnicity)) + ", " + mysql.escape(nts(request.body.FavoriteSites)) + ", " + mysql.escape(nts(request.body.FavoriteMusic)) + ", " + mysql.escape(nts(request.body.FavoriteFilms)) + ", " + mysql.escape(nts(request.body.FavoriteBooks)) + ", " + mysql.escape(nts(request.body.FirstName)) + ", " + mysql.escape(nts(request.body.LastName)) + ")";
+//console.log(sql);
+                    try {
+                        connectionPool.getConnection(function (err, connection, sql) {
+                            console.log(sql);
+                            connection.query("SELECT count(id) as count FROM Profiles WHERE NickName = " + mysql.escape(request.body.NickName), request.body.NickName, function (err, rows, fields) {
+                                console.log(sql);
+                                var count = rows[0].count;
+//console.log(count);
+                                if (count == 0) {
+                                    console.log('count printed');
+                                    connectionPool.getConnection(function (err, connection, sql) {
+                                        connection.query("INSERT INTO `Profiles`(NickName, Email, Password, Salt, Couple, Sex, LookingFor, Headline, DescriptionMe, Country, City, DateOfBirth, DateReg, Tags, zip, EmailNotify, Height, Weight, Income, Occupation, Religion, Education, RelationshipStatus, Hobbies, Interests, Ethnicity, FavoriteSites, FavoriteMusic, FavoriteFilms, FavoriteBooks, FirstName, LastName) VALUES (" + mysql.escape(request.body.NickName) + ", " + mysql.escape(request.body.Email) + ", " + "'" + Password + "'" + ", " + "'" + Salt + "'" + ", " + mysql.escape(nts(request.body.Couple)) + ", " + mysql.escape(nts(request.body.Sex)) + ", " + mysql.escape(nts(request.body.LookingFor)) + ", " + mysql.escape(nts(request.body.Headline)) + ", " + mysql.escape(nts(request.body.DescriptionMe)) + ", " + mysql.escape(nts(request.body.Country)) + ", " + mysql.escape(nts(request.body.City)) + ", " + mysql.escape(nts(request.body.DateOfBirth)) + ", " + mysql.escape(nts(request.body.DateReg)) + ", " + mysql.escape(nts(request.body.Tags)) + ", " + mysql.escape(nts(request.body.zip)) + ", " + mysql.escape(nts(request.body.EmailNotify)) + ", " + mysql.escape(nts(request.body.Height)) + ", " + mysql.escape(nts(request.body.Weight)) + ", " + mysql.escape(nts(request.body.Income)) + ", " + mysql.escape(nts(request.body.Occupation)) + ", " + mysql.escape(nts(request.body.Religion)) + ", " + mysql.escape(nts(request.body.Education)) + ", " + mysql.escape(nts(request.body.RelationshipStatus)) + ", " + mysql.escape(nts(request.body.Hobbies)) + ", " + mysql.escape(nts(request.body.Interests)) + ", " + mysql.escape(nts(request.body.Ethnicity)) + ", " + mysql.escape(nts(request.body.FavoriteSites)) + ", " + mysql.escape(nts(request.body.FavoriteMusic)) + ", " + mysql.escape(nts(request.body.FavoriteFilms)) + ", " + mysql.escape(nts(request.body.FavoriteBooks)) + ", " + mysql.escape(nts(request.body.FirstName)) + ", " + mysql.escape(nts(request.body.LastName)) + ")", request.body.NickName, function (err, rows, fields) {
+//console.log("INSERT INTO `Profiles`(NickName, Email, Password, Salt, Couple, Sex, LookingFor, Headline, DescriptionMe, Country, City, DateOfBirth, DateReg, Tags, zip, EmailNotify, Height, Weight, Income, Occupation, Religion, Education, RelationshipStatus, Hobbies, Interests, Ethnicity, FavoriteSites, FavoriteMusic, FavoriteFilms, FavoriteBooks, FirstName, LastName) VALUES ("+mysql.escape(request.body.NickName)+", "+mysql.escape(request.body.Email)+", "+"'"+Password+"'"+", "+"'"+Salt+"'"+", "+mysql.escape(nts(request.body.Couple))+", "+mysql.escape(nts(request.body.Sex))+", "+mysql.escape(nts(request.body.LookingFor))+", "+mysql.escape(nts(request.body.Headline))+", "+mysql.escape(nts(request.body.DescriptionMe))+", "+mysql.escape(nts(request.body.Country))+", "+mysql.escape(nts(request.body.City))+", "+mysql.escape(nts(request.body.DateOfBirth))+", "+mysql.escape(nts(request.body.DateReg))+", "+mysql.escape(nts(request.body.Tags))+", "+mysql.escape(nts(request.body.zip))+", "+mysql.escape(nts(request.body.EmailNotify))+", "+mysql.escape(nts(request.body.Height))+", "+mysql.escape(nts(request.body.Weight))+", "+mysql.escape(nts(request.body.Income))+", "+mysql.escape(nts(request.body.Occupation))+", "+mysql.escape(nts(request.body.Religion))+", "+mysql.escape(nts(request.body.Education))+", "+mysql.escape(nts(request.body.RelationshipStatus))+", "+mysql.escape(nts(request.body.Hobbies))+", "+mysql.escape(nts(request.body.Interests))+", "+mysql.escape(nts(request.body.Ethnicity))+", "+mysql.escape(nts(request.body.FavoriteSites))+", "+mysql.escape(nts(request.body.FavoriteMusic))+", "+mysql.escape(nts(request.body.FavoriteFilms))+", "+mysql.escape(nts(request.body.FavoriteBooks))+", "+mysql.escape(nts(request.body.FirstName))+", "+mysql.escape(nts(request.body.LastName))+")");
+                                        });
+                                    });
+                                    connectionPool.getConnection(function (err, connection, sql) {
+                                        connection.query("SELECT id FROM Profiles WHERE NickName = " + mysql.escape(request.body.NickName), request.body.NickName, function (err, rows, fields) {
+                                            response.send({
+                                                result: 'success',
+                                                err: '',
+//fields: fields,
+                                                json: rows
+//length: rows.length
+                                            });
+                                        });
+                                    });
+                                }
+                                else {
+                                    response.send({
+                                        result: 'success',
+                                        err: '',
+//fields: fields,
+                                        json: -1
+//length: rows.length
+                                    });
+                                }
+//console.log(count);
+                                connection.release();
+                            });
+                        });
+                    } catch (e) {
+                        res.writeHead(err);
+                        console.log(err);
+                    }
+                    console.log('count = ' + count);
+////console.log(request.body);
                 }
             }
         }
