@@ -1,3 +1,4 @@
 /connect.js
 nbproject/*
 node_modules/*
+.idea/
