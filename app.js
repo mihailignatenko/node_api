@@ -31,6 +31,7 @@ connectionpool.getConnection(function (err, connection) {
         for (i = 0; i < rows.length; ++i) {
             boonex_modules[rows[i].title] = rows[i].title;
         }
+         console.log('I am sys modules');
         // now it's ready to create routes
 
         var testRoutes = require('./routes/test');
@@ -123,6 +124,17 @@ app.get('/event/:id/posts/:perpage/:page', function (req, res) {
         });
     } catch (e) {
         res.writeHead(err);
+    }
+});
+app.get('/categories', function(){
+    try{
+        connectionpool.getConnection(function(err, connection){
+            connection.query('SELECT * FROM  sys_categories', null, function(err, rows, fields){
+                
+            });
+        });
+    } catch(e){
+        
     }
 });
 //comment for events
