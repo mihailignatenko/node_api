@@ -38,9 +38,9 @@ connectionpool.getConnection(function (err, connection) {
         var profilesRoutes = require('./routes/profiles')(app);
 
         app.get('/profile/:id', profilesRoutes.get.profileById);
-        app.get('/profiles/:page/:perpage', profilesRoutes.get.profilesPerPage);
-        app.get('/profiles/:id/friends', profilesRoutes.get.profileFriends);
-        app.post('/register', profilesRoutes.post.register);
+        app.get('/profile/:id/friends', profilesRoutes.get.profileFriends);
+        app.get('/profiles/:page/:perpage', profilesRoutes.get.profilesPerPage);        
+        app.post('/register', profilesRoutes.post.profileRegister);
 
     });
 });
@@ -53,8 +53,5 @@ function isFaceBook() {
     else
         return ' ';
 }
-
-
-
 app.listen(8000);
 //console.log('Rest Demo Listening on port 8000');
