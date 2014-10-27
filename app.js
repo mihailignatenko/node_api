@@ -1,23 +1,27 @@
-var connect_params = require('./connect');
-//var Cookies = require("cookies");
-var express = require('express'),
-        app = express(),
-        mysql = require('mysql'),
-        connectionpool = mysql.createPool(connect_params.connection);
-
-var boonex_modules = [];
-var bodyParser = require('body-parser');
-
-app.use(bodyParser.json());       // to support JSON-encoded bodies
-app.use(bodyParser.urlencoded()); // to support URL-encoded bodies
-//var Cookies = require("cookies");
-app.use(function (req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "X-Requested-With");
-    next();
-});
-
-
+//var connect_params = require('./connect');
+////var Cookies = require("cookies");
+//var express = require('express'),
+//        app = express(),
+//        mysql = require('mysql'),
+//        connectionpool = mysql.createPool(connect_params.connection);
+//
+//var boonex_modules = [];
+//var bodyParser = require('body-parser');
+//
+//app.use(bodyParser.json());       // to support JSON-encoded bodies
+//app.use(bodyParser.urlencoded()); // to support URL-encoded bodies
+////var Cookies = require("cookies");
+//app.use(function (req, res, next) {
+//    res.header("Access-Control-Allow-Origin", "*");
+//    res.header("Access-Control-Allow-Headers", "X-Requested-With");
+//    next();
+//});
+var  mysql = require('mysql');
+var application =require('./application');
+var connect_params = application.connect_params;
+var app = application.app;
+var boonex_modules = application.boonex_modules;
+connectionpool = mysql.createPool(connect_params.connection);
 connectionpool.getConnection(function (err, connection) {
     connection.query("SELECT * FROM `sys_modules`", null, function (err, rows) {
         for (i = 0; i < rows.length; ++i) {
@@ -49,6 +53,8 @@ function isFaceBook() {
     else
         return ' ';
 }
+
+
 
 app.listen(8000);
 //console.log('Rest Demo Listening on port 8000');
