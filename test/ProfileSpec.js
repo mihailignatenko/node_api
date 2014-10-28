@@ -41,7 +41,7 @@ describe('profiles', function () {
                     done();
                 });
     });
-    it('should register user nad return id', function (done) {
+    it('should register user and return id', function (done) {
 //        curl -d 'NickName=test15&password_confirm=123&FirstName=Name1&LastName=Last1&Password=123&Email=aa@aa.com' localhost:8000/register
         var testname ='test'+ new Date().getTime();
         var profile = {
@@ -60,7 +60,7 @@ describe('profiles', function () {
                         throw err;
                     }
                     //{"result":"success","ID":[{"id":41}]}
-                    console.log(res);
+                    //console.log(res);
                     done();
                     //res.body.ID[0].id.should.be();
                 });

@@ -91,11 +91,11 @@ function profileRegister(req, cb) {
                         });
                     });
                 } catch (e) {
-                    res.writeHead(e);
+                    res.end(e);
                     console.log(e);
                 }
             }
-        });
+        });        
     } catch (e) {
         res.end(e);
     }

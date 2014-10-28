@@ -65,7 +65,6 @@ module.exports = function (connectionPool, boonex_modules) {
                         result: 'invalid data'
                     });
                 }
-
             }
         }
     };
