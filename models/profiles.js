@@ -6,10 +6,8 @@ var randomString = functions.randomString;
 var nts = functions.nts;
 function getProfileById(id, cb) {
     connectionPool.getConnection(function (err, connection) {
-        var fb = process.boonex_modules['FacebookProfile'] ? ' , p.FacebookProfile , ': ' ';
-        console.log('');
-        var av = process.boonex_modules['Avatar'] ? ' , p.Avatar, ' : '  ';
-
+        var fb = process.boonex_modules['FacebookProfile'] ? '  p.FacebookProfile , ' : ' ';
+        var av = process.boonex_modules['Avatar'] ? '  p.Avatar, ' : '  ';
         connection.query('SELECT p.`ID`, p.`NickName`, p.`Email`, p.`Status`, p.`Role`, p.`Couple`, p.`Sex`,' +
                 ' p.`LookingFor`, p.`Headline`, p.`DescriptionMe`, ' + ' p.`Country`, p.`City`, p.`DateOfBirth`,' +
                 ' p.`Featured`, p.`DateReg`, p.`DateLastEdit`, p.`DateLastLogin`, p.`DateLastNav`, p.`aff_num`,' +
@@ -17,13 +15,13 @@ function getProfileById(id, cb) {
                 ' p.`CommentsCount`, p.`PrivacyDefaultGroup`, p.`allow_view_to`, p.`UserStatus`, p.`UserStatusMessage`,' +
                 ' p.`UserStatusMessageWhen`, p.`Height`, p.`Weight`, p.`Income`, p.`Occupation`, p.`Religion`,' +
                 ' p.`Education`, p.`RelationshipStatus`, p.`Hobbies`, p.`Interests`, p.`Ethnicity`, p.`FavoriteSites`,' +
-                ' p.`FavoriteMusic`, p.`FavoriteFilms`, p.`FavoriteBooks`, p.`FirstName`, p.`LastName`  FROM Profiles as' +
+                ' p.`FavoriteMusic`, p.`FavoriteFilms`, p.`FavoriteBooks`, p.`FirstName`,' + av + fb + ' p.`LastName`  FROM Profiles as' +
                 ' p WHERE p.id = ' + id, function (err, rows, fields) {
                     if (rows.length > 0) {
                         var tmp = rows[0];
-                            process.nextTick(function () {
-                                cb(null, tmp);
-                            });
+                        process.nextTick(function () {
+                            cb(null, tmp);
+                        });
                         connection.release();
                     } else {
                         cb('user not found');
@@ -113,6 +111,31 @@ function getFriends(id, cb) {
 }
 ;
 
+function profileAuth(nickname, password, session, cb) {
+    connectionPool.getConnection(function (err, connection) {
+        connection.query('SELECT * FROM Profiles WHERE NickName = ' + mysql.escape(nickname)+'LIMIT 1', function (err, rows, fields) {
+            //console.log('SELECT * FROM Profiles WHERE NickName = ' + mysql.escape(nickname)+' LIMIT 1');
+            var Pass = crypto.createHash('md5').update(password).digest('hex');
+            var Password = crypto.createHash('sha1').update(Pass + rows[0]["Salt"]).digest('hex');
+            console.log(Password);
+            console.log(rows[0]["Password"]);
+            if (rows[0]) {
+                if(rows[0]["Password"]==Password){
+                    console.log("Auth!");
+                    session.auth = true;
+                    session.save();
+                    console.log(session);
+                }
+            }
+            console.log(rows);
+            process.nextTick(function () {
+                cb(null, rows);
+            });
+        });
+    });
+}
+;
+
 function getProfilesPerPage(page, perPage, cb) {
     if (process.boonex_modules['Avatar']) {
         try {
@@ -132,27 +155,27 @@ function getProfilesPerPage(page, perPage, cb) {
         try {
             connectionPool.getConnection(function (err, connection) {
                 connection.query('SELECT p.`ID`, p.`NickName`, p.`Email`, p.`Status`, p.`Role`, p.`Couple`, p.`Sex`,' +
-                ' p.`LookingFor`, p.`Headline`, p.`DescriptionMe`, ' + ' p.`Country`, p.`City`, p.`DateOfBirth`,' +
-                ' p.`Featured`, p.`DateReg`, p.`DateLastEdit`, p.`DateLastLogin`, p.`DateLastNav`, p.`aff_num`,' +
-                ' p.`Tags`, p.`zip`, p.`EmailNotify`, p.`LangID`, p.`UpdateMatch`, p.`Views`, p.`Rate`, p.`RateCount`,' +
-                ' p.`CommentsCount`, p.`PrivacyDefaultGroup`, p.`allow_view_to`, p.`UserStatus`, p.`UserStatusMessage`,' +
-                ' p.`UserStatusMessageWhen`, p.`Height`, p.`Weight`, p.`Income`, p.`Occupation`, p.`Religion`,' +
-                ' p.`Education`, p.`RelationshipStatus`, p.`Hobbies`, p.`Interests`, p.`Ethnicity`, p.`FavoriteSites`,' +
-                ' p.`FavoriteMusic`, p.`FavoriteFilms`, p.`FavoriteBooks`, p.`FirstName`, p.`LastName` FROM Profiles as' +
-                ' p', null, function (err, rows, fields) {
-                    console.log('SELECT p.`ID`, p.`NickName`, p.`Email`, p.`Status`, p.`Role`, p.`Couple`, p.`Sex`,' +
-                ' p.`LookingFor`, p.`Headline`, p.`DescriptionMe`, ' + ' p.`Country`, p.`City`, p.`DateOfBirth`,' +
-                ' p.`Featured`, p.`DateReg`, p.`DateLastEdit`, p.`DateLastLogin`, p.`DateLastNav`, p.`aff_num`,' +
-                ' p.`Tags`, p.`zip`, p.`EmailNotify`, p.`LangID`, p.`UpdateMatch`, p.`Views`, p.`Rate`, p.`RateCount`,' +
-                ' p.`CommentsCount`, p.`PrivacyDefaultGroup`, p.`allow_view_to`, p.`UserStatus`, p.`UserStatusMessage`,' +
-                ' p.`UserStatusMessageWhen`, p.`Height`, p.`Weight`, p.`Income`, p.`Occupation`, p.`Religion`,' +
-                ' p.`Education`, p.`RelationshipStatus`, p.`Hobbies`, p.`Interests`, p.`Ethnicity`, p.`FavoriteSites`,' +
-                ' p.`FavoriteMusic`, p.`FavoriteFilms`, p.`FavoriteBooks`, p.`FirstName`, p.`LastName` FROM Profiles as' +
-                ' p');
-                    process.nextTick(function () {
-                        cb(null, rows);
-                    });
-                });
+                        ' p.`LookingFor`, p.`Headline`, p.`DescriptionMe`, ' + ' p.`Country`, p.`City`, p.`DateOfBirth`,' +
+                        ' p.`Featured`, p.`DateReg`, p.`DateLastEdit`, p.`DateLastLogin`, p.`DateLastNav`, p.`aff_num`,' +
+                        ' p.`Tags`, p.`zip`, p.`EmailNotify`, p.`LangID`, p.`UpdateMatch`, p.`Views`, p.`Rate`, p.`RateCount`,' +
+                        ' p.`CommentsCount`, p.`PrivacyDefaultGroup`, p.`allow_view_to`, p.`UserStatus`, p.`UserStatusMessage`,' +
+                        ' p.`UserStatusMessageWhen`, p.`Height`, p.`Weight`, p.`Income`, p.`Occupation`, p.`Religion`,' +
+                        ' p.`Education`, p.`RelationshipStatus`, p.`Hobbies`, p.`Interests`, p.`Ethnicity`, p.`FavoriteSites`,' +
+                        ' p.`FavoriteMusic`, p.`FavoriteFilms`, p.`FavoriteBooks`, p.`FirstName`, p.`LastName` FROM Profiles as' +
+                        ' p', null, function (err, rows, fields) {
+                            console.log('SELECT p.`ID`, p.`NickName`, p.`Email`, p.`Status`, p.`Role`, p.`Couple`, p.`Sex`,' +
+                                    ' p.`LookingFor`, p.`Headline`, p.`DescriptionMe`, ' + ' p.`Country`, p.`City`, p.`DateOfBirth`,' +
+                                    ' p.`Featured`, p.`DateReg`, p.`DateLastEdit`, p.`DateLastLogin`, p.`DateLastNav`, p.`aff_num`,' +
+                                    ' p.`Tags`, p.`zip`, p.`EmailNotify`, p.`LangID`, p.`UpdateMatch`, p.`Views`, p.`Rate`, p.`RateCount`,' +
+                                    ' p.`CommentsCount`, p.`PrivacyDefaultGroup`, p.`allow_view_to`, p.`UserStatus`, p.`UserStatusMessage`,' +
+                                    ' p.`UserStatusMessageWhen`, p.`Height`, p.`Weight`, p.`Income`, p.`Occupation`, p.`Religion`,' +
+                                    ' p.`Education`, p.`RelationshipStatus`, p.`Hobbies`, p.`Interests`, p.`Ethnicity`, p.`FavoriteSites`,' +
+                                    ' p.`FavoriteMusic`, p.`FavoriteFilms`, p.`FavoriteBooks`, p.`FirstName`, p.`LastName` FROM Profiles as' +
+                                    ' p');
+                            process.nextTick(function () {
+                                cb(null, rows);
+                            });
+                        });
             });
 
         } catch (e) {
@@ -168,6 +191,7 @@ module.exports = function (_connectionPool) {
         getProfileById: getProfileById,
         getProfilesPerPage: getProfilesPerPage,
         getFriends: getFriends,
-        profileRegister: profileRegister
+        profileRegister: profileRegister,
+        profileAuth: profileAuth
     };
 };
