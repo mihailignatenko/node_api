@@ -38,17 +38,6 @@ app.use(swagger.init(app, {
 }));
 //app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
-
-
-app.use(function(req, res, next){    
-    req.session.views++;
-    
-    req.session.save(function(err) {
-        console.log(req.session);
-    });
-    next();
-});
-
 connectionpool = mysql.createPool(connect_params.connection);
 connectionpool.getConnection(function (err, connection) {
     connection.query("SELECT * FROM `sys_modules`", null, function (err, rows) {
@@ -68,6 +57,7 @@ connectionpool.getConnection(function (err, connection) {
         app.get('/profile/:id/friends', profilesRoutes.get.profileFriends);
         app.get('/profiles/:page/:perpage', profilesRoutes.get.profilesPerPage);
         app.post('/register', profilesRoutes.post.profileRegister);
+        app.post('/auth', profilesRoutes.post.profileAuth);
 
     });
 });
