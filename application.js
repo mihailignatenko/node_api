@@ -17,7 +17,17 @@ app.use(function (req, res, next) {
     //res.header('Content-Type: application/json');
     next();
 });
+var conf = {
+  db: {
+    db: 'test',
+    host: 'localhost',
+    port: 27017,  // optional, default: 27017
+    collection: 'mySessions' // optional, default: sessions
+  },
+  secret: '076ee61d63aa10a125ea872411e433b9'
+};
 exports.app = app;
 exports.boonex_modules = boonex_modules;
 exports.connect_params = connect_params;
 exports.express = express;
+exports.conf = conf;
