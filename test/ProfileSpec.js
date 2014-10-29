@@ -15,7 +15,7 @@ var assert = require('assert');
 //    });
 //});
 describe('profiles', function () {
-    var url = 'http://localhost:8000';
+    var url = 'http://localhost:3000';
     it('should return user with id=1', function (done) {
         request(url)
                 .get('/profile/1')
@@ -24,8 +24,8 @@ describe('profiles', function () {
                     if (err) {
                         throw err;
                     }
-                    res.body.json.ID.should.equal(1);
-                    console.log(res.body.json.ID);
+                    res.body.ID.should.equal(1);
+                    console.log(res.body.ID);
                     done();
                 });
     });
@@ -37,7 +37,7 @@ describe('profiles', function () {
                     if (err) {
                         throw err;
                     }
-                    res.body.json[0].ID.should.equal(31);
+                    res.body[0].ID.should.equal(31);
                     done();
                 });
     });
@@ -59,10 +59,7 @@ describe('profiles', function () {
                     if (err) {
                         throw err;
                     }
-                    //{"result":"success","ID":[{"id":41}]}
-                    //console.log(res);
-                    done();
-                    //res.body.ID[0].id.should.be();
+                    done();                    
                 });
     });
 });

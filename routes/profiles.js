@@ -28,37 +28,25 @@ function profileById(req, res) {
     if (err) {
       res.send({'err': 'user not found'});
     } else {
-      res.send({
-        'json': data
-      });
+      res.send(data);
     }
   });
 }
 
 function profilesPerPage(req, res) {
-  model.getProfilesPerPage(req.params.page, req.params.perpage, function (err, data) {
-    res.send({
-      result: 'success',
-      err: '',
-      json: data
-    });
+  model.getProfilesPerPage(req.params.page, req.params.perpage, function (err, data) {      
+    res.send(data);
   });
 }
 
 function profileFriends(req, res) {
     model.getFriends(req.params.id, function(err, data){
-        res.send({
-            result: 'success',
-            json: data
-        });
+        res.send(data);
     });
 }
 function profileRegister(req, res){
     model.profileRegister(req, function(err, data){
-        res.send({
-            result: 'success',
-            ID: data
-        });
+        res.send(data);
     });
 }
 
