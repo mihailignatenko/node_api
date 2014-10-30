@@ -52,10 +52,12 @@ connectionpool.getConnection(function (err, connection) {
         //DEBUG]]---------------------------------------------------
 
         require('./routes/test')(app);
+        var menuRoutes = require('./routes/menus')(app);
         var profilesRoutes = require('./routes/profiles')(app);
         app.get('/profile/:id', profilesRoutes.get.profileById);
         app.get('/profile/:id/friends', profilesRoutes.get.profileFriends);
         app.get('/profiles/:page/:perpage', profilesRoutes.get.profilesPerPage);
+        app.get('/topmenu', menuRoutes.get.getTopMenu);
         app.post('/register', profilesRoutes.post.profileRegister);
         app.post('/auth', profilesRoutes.post.profileAuth);
 

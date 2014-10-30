@@ -108,8 +108,8 @@ function getFriends(id, cb) {
     } catch (e) {
         res.end(e);
     }
-}
-;
+};
+
 
 function profileAuth(nickname, password, session, cb) {
     connectionPool.getConnection(function (err, connection) {
@@ -191,6 +191,7 @@ module.exports = function (_connectionPool) {
         getProfileById: getProfileById,
         getProfilesPerPage: getProfilesPerPage,
         getFriends: getFriends,
+        
         profileRegister: profileRegister,
         profileAuth: profileAuth
     };
