@@ -31,6 +31,7 @@ function getTopMenu(cb) {
                                 else {
                                     console.log(err);
                                 }
+                              connection.release();
                             });
                         });
                         callback();
@@ -55,6 +56,7 @@ function getServiceMenu(cb) {
                     cb(null, rows);
                 });
             });
+          connection.release();
         });
     } catch (e) {
         res.end(e);

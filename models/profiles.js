@@ -63,6 +63,7 @@ function profileRegister(req, cb) {
                                 console.log('count printed');
                                 connectionPool.getConnection(function (err, connection, sql) {
                                     connection.query("INSERT INTO `Profiles`(NickName, Email, Password, Salt, Couple, Sex, LookingFor, Headline, DescriptionMe, Country, City, DateOfBirth, DateReg, Tags, zip, EmailNotify, Height, Weight, Income, Occupation, Religion, Education, RelationshipStatus, Hobbies, Interests, Ethnicity, FavoriteSites, FavoriteMusic, FavoriteFilms, FavoriteBooks, FirstName, LastName) VALUES (" + mysql.escape(req.body.NickName) + ", " + mysql.escape(req.body.Email) + ", " + "'" + Password + "'" + ", " + "'" + Salt + "'" + ", " + mysql.escape(nts(req.body.Couple)) + ", " + mysql.escape(nts(req.body.Sex)) + ", " + mysql.escape(nts(req.body.LookingFor)) + ", " + mysql.escape(nts(req.body.Headline)) + ", " + mysql.escape(nts(req.body.DescriptionMe)) + ", " + mysql.escape(nts(req.body.Country)) + ", " + mysql.escape(nts(req.body.City)) + ", " + mysql.escape(nts(req.body.DateOfBirth)) + ", " + mysql.escape(nts(req.body.DateReg)) + ", " + mysql.escape(nts(req.body.Tags)) + ", " + mysql.escape(nts(req.body.zip)) + ", " + mysql.escape(nts(req.body.EmailNotify)) + ", " + mysql.escape(nts(req.body.Height)) + ", " + mysql.escape(nts(req.body.Weight)) + ", " + mysql.escape(nts(req.body.Income)) + ", " + mysql.escape(nts(req.body.Occupation)) + ", " + mysql.escape(nts(req.body.Religion)) + ", " + mysql.escape(nts(req.body.Education)) + ", " + mysql.escape(nts(req.body.RelationshipStatus)) + ", " + mysql.escape(nts(req.body.Hobbies)) + ", " + mysql.escape(nts(req.body.Interests)) + ", " + mysql.escape(nts(req.body.Ethnicity)) + ", " + mysql.escape(nts(req.body.FavoriteSites)) + ", " + mysql.escape(nts(req.body.FavoriteMusic)) + ", " + mysql.escape(nts(req.body.FavoriteFilms)) + ", " + mysql.escape(nts(req.body.FavoriteBooks)) + ", " + mysql.escape(nts(req.body.FirstName)) + ", " + mysql.escape(nts(req.body.LastName)) + ")", req.body.NickName, function (err, rows, fields) {
+                                      connection.release();
                                     });
                                 });
                                 connectionPool.getConnection(function (err, connection, sql) {
@@ -70,6 +71,7 @@ function profileRegister(req, cb) {
                                         process.nextTick(function () {
                                             cb(null, rows);
                                         });
+                                      connection.release();
                                     });
                                 });
                             }
@@ -104,6 +106,7 @@ function getFriends(id, cb) {
                     cb(null, rows);
                 });
             });
+          connection.release();
         });
     } catch (e) {
         res.end(e);
@@ -130,6 +133,7 @@ function profileAuth(nickname, password, session, cb) {
             process.nextTick(function () {
                 cb(null, rows);
             });
+          connection.release();
         });
     });
 };
@@ -143,6 +147,7 @@ function getProfilesPerPage(page, perPage, cb) {
                     process.nextTick(function () {
                         cb(null, rows);
                     });
+                  connection.release();
                 });
             });
 
@@ -161,21 +166,12 @@ function getProfilesPerPage(page, perPage, cb) {
                         ' p.`Education`, p.`RelationshipStatus`, p.`Hobbies`, p.`Interests`, p.`Ethnicity`, p.`FavoriteSites`,' +
                         ' p.`FavoriteMusic`, p.`FavoriteFilms`, p.`FavoriteBooks`, p.`FirstName`, p.`LastName` FROM Profiles as' +
                         ' p', null, function (err, rows, fields) {
-                            console.log('SELECT p.`ID`, p.`NickName`, p.`Email`, p.`Status`, p.`Role`, p.`Couple`, p.`Sex`,' +
-                                    ' p.`LookingFor`, p.`Headline`, p.`DescriptionMe`, ' + ' p.`Country`, p.`City`, p.`DateOfBirth`,' +
-                                    ' p.`Featured`, p.`DateReg`, p.`DateLastEdit`, p.`DateLastLogin`, p.`DateLastNav`, p.`aff_num`,' +
-                                    ' p.`Tags`, p.`zip`, p.`EmailNotify`, p.`LangID`, p.`UpdateMatch`, p.`Views`, p.`Rate`, p.`RateCount`,' +
-                                    ' p.`CommentsCount`, p.`PrivacyDefaultGroup`, p.`allow_view_to`, p.`UserStatus`, p.`UserStatusMessage`,' +
-                                    ' p.`UserStatusMessageWhen`, p.`Height`, p.`Weight`, p.`Income`, p.`Occupation`, p.`Religion`,' +
-                                    ' p.`Education`, p.`RelationshipStatus`, p.`Hobbies`, p.`Interests`, p.`Ethnicity`, p.`FavoriteSites`,' +
-                                    ' p.`FavoriteMusic`, p.`FavoriteFilms`, p.`FavoriteBooks`, p.`FirstName`, p.`LastName` FROM Profiles as' +
-                                    ' p');
                             process.nextTick(function () {
                                 cb(null, rows);
                             });
+                          connection.release();
                         });
             });
-
         } catch (e) {
             cb(null, e);
         }
