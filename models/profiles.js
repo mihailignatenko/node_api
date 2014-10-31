@@ -110,7 +110,6 @@ function getFriends(id, cb) {
     }
 };
 
-
 function profileAuth(nickname, password, session, cb) {
     connectionPool.getConnection(function (err, connection) {
         connection.query('SELECT * FROM Profiles WHERE NickName = ' + mysql.escape(nickname)+'LIMIT 1', function (err, rows, fields) {
@@ -133,8 +132,7 @@ function profileAuth(nickname, password, session, cb) {
             });
         });
     });
-}
-;
+};
 
 function getProfilesPerPage(page, perPage, cb) {
     if (process.boonex_modules['Avatar']) {

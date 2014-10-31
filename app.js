@@ -7,7 +7,7 @@ var app = application.app;
 var bodyParser = require('body-parser');
 var boonex_modules = application.boonex_modules;
 var path = require('path');
-var swagger = require('./lib/swagger-express');
+var swagger = require('swagger-express');
 var express = application.express;
 app.use(cookieParser());
 var expressSession = require('express-session');
@@ -58,8 +58,10 @@ connectionpool.getConnection(function (err, connection) {
         app.get('/profile/:id/friends', profilesRoutes.get.profileFriends);
         app.get('/profiles/:page/:perpage', profilesRoutes.get.profilesPerPage);
         app.get('/topmenu', menuRoutes.get.getTopMenu);
+        app.get('/servicemenu', menuRoutes.get.getServiceMenu);
         app.post('/register', profilesRoutes.post.profileRegister);
         app.post('/auth', profilesRoutes.post.profileAuth);
+        
 
     });
 });

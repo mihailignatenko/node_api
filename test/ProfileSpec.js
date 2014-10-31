@@ -25,11 +25,11 @@ describe('profiles', function () {
                         throw err;
                     }
                     res.body.ID.should.equal(1);
-                    console.log(res.body.ID);
+                    //console.log(res.body.ID);
                     done();
                 });
     });
-    it('should get array of user id=1 friends', function (done) {
+    it('should get array of user id=1 friends and fist friend should have ID', function (done) {
         request(url)
                 .get('/profile/1/friends')
                 .send()
@@ -37,7 +37,7 @@ describe('profiles', function () {
                     if (err) {
                         throw err;
                     }
-                    res.body[0].ID.should.equal(31);
+                    res.body[0].should.have.property('ID');
                     done();
                 });
     });
