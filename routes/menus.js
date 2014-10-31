@@ -23,15 +23,27 @@ function getServiceMenu(req, res) {
             res.send(data);
         }
     });
+};
+
+
+function getMenuMember(req, res) {
+  model.getMenuMember(function (err, data){
+      if(err) {
+          res.writeHead(500);
+          res.send({'err': 'menu not found'});
+      } else {
+          res.send(data);
+      }
+  });
 }
-;
 
 module.exports = function (app) {
     model = require('../models/menus')(app.connectionPool);
     return {
         get: {
             getTopMenu: getTopMenu,
-            getServiceMenu: getServiceMenu
+            getServiceMenu: getServiceMenu,
+            getMenuMember: getMenuMember
         },
         post: {
         }

@@ -59,6 +59,7 @@ connectionpool.getConnection(function (err, connection) {
         app.get('/profiles/:page/:perpage', profilesRoutes.get.profilesPerPage);
         app.get('/topmenu', menuRoutes.get.getTopMenu);
         app.get('/servicemenu', menuRoutes.get.getServiceMenu);
+        app.get('/getmenumember', menuRoutes.get.getMenuMember);
         app.post('/register', profilesRoutes.post.profileRegister);
         app.post('/auth', profilesRoutes.post.profileAuth);
         
