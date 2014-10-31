@@ -15,8 +15,9 @@ function getTopMenu(cb) {
                         row.children = [];
                         connectionPool.getConnection(function (err, connection, sql) {
                             connection.query("SELECT * FROM `sys_menu_top` WHERE Parent = " + row.ID, function (err, children, fields) {
-//                                console.log(children);
-                                if (!err && children.length > 0) {
+                                console.log(children);
+                                if (!err || (children.length > 0) ) {
+                                    //console.log(children.length);
                                     children.forEach(function (child) {
                                         row.children.push(child);
                                     });
