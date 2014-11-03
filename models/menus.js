@@ -42,6 +42,7 @@ function getTopMenu(cb) {
                 }
 
             });
+          connection.release();
         });
     } catch (e) {
         res.end(e);
@@ -61,8 +62,7 @@ function getServiceMenu(cb) {
     } catch (e) {
         res.end(e);
     }
-}
-;
+};
 
 function getMenuMember(cb){
   try{
@@ -78,12 +78,28 @@ function getMenuMember(cb){
     res.end(e);
   }
 }
+function getBottomMenu (cb) {
+  try {
+    connectionPool.getConnection(function(err, connection){
+      connection.query("SELECT * FROM `sys_menu_bottom`", function (err, rows, fields){
+                process.nextTick(function () {
+                    cb(null, rows);
+                });
+        connection.release();
+      });
+    });
+  }
+  catch (e) {
+    res.end(e);
+  }
+}
 
 module.exports = function (_connectionPool) {
     connectionPool = _connectionPool;
     return {
         getTopMenu: getTopMenu,
         getServiceMenu: getServiceMenu,
-        getMenuMember: getMenuMember
+        getMenuMember: getMenuMember,
+        getBottomMenu: getBottomMenu
     };
 };

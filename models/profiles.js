@@ -22,10 +22,11 @@ function getProfileById(id, cb) {
                         process.nextTick(function () {
                             cb(null, tmp);
                         });
-                        connection.release();
+                        //connection.release();
                     } else {
                         cb('user not found');
                     }
+                connection.release();
                 });
     });
 }
@@ -177,6 +178,20 @@ function getProfilesPerPage(page, perPage, cb) {
         }
     }
 }
+function profileFields(cb){
+  try{
+    connectionPool.getConnection(function(err, connection){
+      connection.query('SELECT * FROM `sys_profile_fields`', function(err, rows, fields){
+        process.nextTick(function(){
+          cb(null, rows);
+        });
+        connection.release();
+      });
+    });
+  }catch(e){
+    cb(null, e);
+  }
+}
 
 module.exports = function (_connectionPool) {
     connectionPool = _connectionPool;
@@ -185,7 +200,7 @@ module.exports = function (_connectionPool) {
         getProfileById: getProfileById,
         getProfilesPerPage: getProfilesPerPage,
         getFriends: getFriends,
-        
+        profileFields: profileFields,
         profileRegister: profileRegister,
         profileAuth: profileAuth
     };

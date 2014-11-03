@@ -15,7 +15,6 @@ describe('menus', function () {
                     if (err) {
                         throw err;
                     }
-                    //console.log(res.body[0].ID);
                     res.body[0].should.have.property('ID');                    
                     done();
                 });
@@ -32,9 +31,9 @@ describe('menus', function () {
                     done();
                 });
     });
-    it('should check for id of 1-st element in top menu', function(done){
+    it('should check for id of 1-st element in menumember', function(done){
         request(url)
-                .get('/getmenumember')
+                .get('/menumember')
                 .send()
                 .end(function(err, res){
                     if (err){

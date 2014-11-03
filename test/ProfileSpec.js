@@ -59,7 +59,7 @@ describe('profiles', function () {
                     if (err) {
                         throw err;
                     }
-                    done();                    
+                    done();
                 });
     });
 });

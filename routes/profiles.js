@@ -58,6 +58,11 @@ function profileAuth(req, res){
     });
 }
 
+function profileFields(req, res){
+  model.profileFields(req, function(err, data){
+    res.send(data);
+  });
+}
 
 module.exports = function (app) {
   model = require('../models/profiles')(app.connectionPool);
@@ -65,7 +70,8 @@ module.exports = function (app) {
     get: {
       profileById: profileById,
       profilesPerPage: profilesPerPage,
-      profileFriends: profileFriends
+      profileFriends: profileFriends,
+      profileFields: profileFields
     },
     post: {
       profileRegister: profileRegister,
@@ -73,3 +79,11 @@ module.exports = function (app) {
     }
   };
 };
+//module.exports = function (app) {
+//
+//    return {
+//        get: functions.routing(['profileById', 'profilesPerPage', 'profileFriends'], require('../models/profiles')(app.connectionPool)),
+//        post: functions.routing(['profileRegister', 'profileAuth'], require('../models/profiles')(app.connectionPool))
+//
+//    };
+//};

@@ -15,3 +15,26 @@ exports.randomString = function randomString(len, charSet) {
   }
   return randomString;
 };
+
+routerRoute = function (model, route, errorText){
+  return function(req, res){
+     errorText = typeof errorText !== 'undefined' ? errorText : 'server error';
+     //console.log(model[route]);
+     model[route](function(err, data){
+      if(err){
+          res.writeHead(500);
+          res.send({'err': errorText});
+      } else {
+          res.send(data);
+      }
+    });
+  }
+}
+
+exports.routing = function(routesArray, model, errorText){
+  result = {};
+  routesArray.forEach(function(currentRoute){
+    result[currentRoute] =routerRoute(model, currentRoute);
+  });
+  return result;
+}
