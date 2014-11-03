@@ -49,13 +49,18 @@ function profileRegister(req, res){
         res.send(data);
     });
 }
-function profileAuth(req, res){
-    //console.log(req.body);
-    model.profileAuth(req.body.NickName, req.body.Password, req.session, function(err, data){        
-       res.send({auth: 'ok'}); 
-       req.session.auth = true;
-       req.session.save();
-    });
+function profileAuth(req, res) {
+  //console.log(req.body);
+  model.profileAuth(req.body.NickName, req.body.Password, req.session, function (err, data) {
+    res.send({auth: 'ok'});
+
+//    req.session.save(function(err) {
+//      if(err) {
+//        console.error(err);
+//        res.send(err);
+//      }
+//    });
+  });
 }
 
 

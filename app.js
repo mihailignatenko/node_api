@@ -7,7 +7,7 @@ var app = application.app;
 var bodyParser = require('body-parser');
 var boonex_modules = application.boonex_modules;
 var path = require('path');
-var swagger = require('./lib/swagger-express');
+var swagger = require('swagger-express');
 var express = application.express;
 app.use(cookieParser());
 var expressSession = require('express-session');
@@ -81,7 +81,7 @@ dbUrl += '/' + conf.db.db;
 console.log(dbUrl);
 mongo.connect(dbUrl);
 mongo.connection.on('open', function () {
-    console.log('connected to mongo');
+  console.log('connected to mongo');
   app.listen(3000);
 });
 //app.listen(3000);
