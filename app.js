@@ -55,6 +55,7 @@ connectionpool.getConnection(function (err, connection) {
         var menuRoutes = require('./routes/menus')(app);
         var profilesRoutes = require('./routes/profiles')(app);
         var predefinedRoutes = require('./routes/predefined')(app);
+        var categoryRoutes = require('./routes/categories')(app);
         app.get('/profile/:id', profilesRoutes.get.profileById);
         app.get('/profile/:id/friends', profilesRoutes.get.profileFriends);
         app.get('/profiles/:page/:perpage', profilesRoutes.get.profilesPerPage);
@@ -64,6 +65,7 @@ connectionpool.getConnection(function (err, connection) {
         app.get('/menumember', menuRoutes.get.getMenuMember);
         app.get('/predefined', predefinedRoutes.get.getPredefined);
         app.get('/profilefields', profilesRoutes.get.profileFields);
+        app.get('/syscategories', categoryRoutes.get.sysCategories);
         app.post('/register', profilesRoutes.post.profileRegister);
         app.post('/auth', profilesRoutes.post.profileAuth);
         

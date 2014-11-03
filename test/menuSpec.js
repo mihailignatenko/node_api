@@ -43,4 +43,16 @@ describe('menus', function () {
                     done();
                 });
     });
+  it('should check for id of 1-st element in bottom menu', function(done){
+      request(url)
+        .get('/bottommenu')
+        .send()
+        .end(function(err, res){
+            if(err){
+             throw err;
+            }
+          res.body[0].should.have.property('ID');
+          done();
+        });
+  });
 });

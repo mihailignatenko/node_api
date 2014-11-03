@@ -205,3 +205,4 @@ module.exports = function (_connectionPool) {
         profileAuth: profileAuth
     };
 };
+
