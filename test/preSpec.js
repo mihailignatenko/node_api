@@ -1,8 +1,5 @@
-var application = require('../application');
-var app = application.app;
 var should = require('should');
 var supertest = require('supertest');
-var profilesRoutes = require('../routes/predefined')(app);
 var request = require('supertest');
 var assert = require('assert');
 

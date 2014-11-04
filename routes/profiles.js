@@ -4,16 +4,6 @@ var model;
 var functions = require('../functions');
 var randomString = functions.randomString;
 
-//function randomString(len, charSet) {
-//  charSet = charSet || 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-//  var randomString = '';
-//  for (var i = 0; i < len; i++) {
-//    var randomPoz = Math.floor(Math.random() * charSet.length);
-//    randomString += charSet.substring(randomPoz, randomPoz + 1);
-//  }
-//  return randomString;
-//}
-
 function nts(val) {
   if (typeof val === 'undefined') {
     return '';
