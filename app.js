@@ -66,6 +66,7 @@ connectionpool.getConnection(function (err, connection) {
         app.get('/predefined', predefinedRoutes.get.getPredefined);
         app.get('/profilefields', profilesRoutes.get.profileFields);
         app.get('/syscategories', categoryRoutes.get.sysCategories);
+        //app.get('/syscatsbymodules/:id', categoryRoutes.get.sysCatsByModules);
         app.post('/register', profilesRoutes.post.profileRegister);
         app.post('/auth', profilesRoutes.post.profileAuth);
         
@@ -93,4 +94,3 @@ mongo.connection.on('open', function () {
     console.log('connected to mongo');
   app.listen(3000);
 });
-//app.listen(3000);

@@ -70,6 +70,18 @@
 //        }
 //    };
 //};
+
+function sysCategories(req, res){
+  model.sysCategories(function(err, data){
+    if(err) {
+      console.log('err', err)
+      res.send(err)
+    } else {
+      res.send(data);
+    }
+  });
+}
+
 var mysql = require('mysql');
 var crypto = require('crypto');
 var model;
@@ -77,8 +89,13 @@ var functions = require('../functions');
 var randomString = functions.randomString;
 
 module.exports = function (app) {
-    return {
-        get: functions.routing(['sysCategories'], require('../models/categories')(app.connectionPool)),
-        post: {}
-    };
+  model = require('../models/categories')(app.connectionPool);
+  return {
+    get: {
+        sysCategories: sysCategories
+    },
+    post: {
+
+    }
+  };
 };
