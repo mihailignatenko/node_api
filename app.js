@@ -46,7 +46,7 @@ connectionpool.getConnection(function (err, connection) {
 
     //DEBUG]]---------------------------------------------------
 
-    require('./routes/test')(app);
+//    require('./routes/test')(app);
     var menuRoutes = require('./routes/menus')(app);
     var profilesRoutes = require('./routes/profiles')(app);
     var predefinedRoutes = require('./routes/predefined')(app);
@@ -77,4 +77,3 @@ mongo.connection.on('open', function () {
   console.log('connected to mongo');
   app.listen(3000, '0.0.0.0');
 });
-//app.listen(3000);

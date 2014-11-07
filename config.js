@@ -1,4 +1,6 @@
-secret_config = require('./private_config');
+var secret_config = require('./private_config')
+  , merge = require('utils-merge');
+
 
 var config = {
   server: {
@@ -11,7 +13,8 @@ config.mysql = {
 };
 
 config.mongo = {
-  development: secret_config.mongo.development
+  development: merge(secret_config.mongo.development,
+    {stringify: false})
 };
 
 config.swagger = {
@@ -29,7 +32,7 @@ config.session = {
   maxAge: 3600000
 };
 
-module.exports = config
+module.exports = config;
 
 function createURI(config) {
 
