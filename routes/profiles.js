@@ -59,7 +59,7 @@ function profileAuth(req, res){
 }
 
 function profileFields(req, res){
-  model.profileFields(req, function(err, data){
+  model.profileFields(function(err, data){
     res.send(data);
   });
 }
