@@ -182,6 +182,7 @@ function profileFields(cb){
   try{
     connectionPool.getConnection(function(err, connection){
       connection.query('SELECT * FROM `sys_profile_fields`', function(err, rows, fields){
+          console.log(rows);
         process.nextTick(function(){
           cb(null, rows);
         });
