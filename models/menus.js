@@ -5,7 +5,11 @@ var functions = require('../functions');
 var randomString = functions.randomString;
 var nts = functions.nts;
 var async = require('async');
-function getTopMenu(cb) {
+
+
+
+
+function getTopMenu(req, res, cb) {
     try {
         connectionPool.getConnection(function (err, connection) {
             connection.query("SELECT * FROM `sys_menu_top` WHERE `Type` = 'top' AND Active = 1 ORDER BY `Order`", function (err, rows, fields) {
@@ -13,9 +17,12 @@ function getTopMenu(cb) {
                     var count = 1;
                     async.each(rows, function (row, callback) {
                         row.children = [];
+                        if(req.session && req.session.user){
+                            console.log(req.session.user.NickName); //!!!!                            
+                        }
                         connectionPool.getConnection(function (err, connection, sql) {
                             connection.query("SELECT * FROM `sys_menu_top` WHERE Parent = " + row.ID, function (err, children, fields) {
-                                console.log(children);
+                                //console.log(children);
                                 if (!err || (children.length > 0) ) {
                                     //console.log(children.length);
                                     children.forEach(function (child) {
@@ -40,8 +47,9 @@ function getTopMenu(cb) {
                             console.error('error looping array\n\n');
                     });
                 }
-
+                //console.log(req.session);
             });
+            
           connection.release();
         });
     } catch (e) {

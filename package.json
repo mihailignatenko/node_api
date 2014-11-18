@@ -18,7 +18,9 @@
     "swagger-node-express": "^2.0.3",
     "sync": "^0.2.3",
     "utils-merge": "^1.0.0",
-    "websocket": "^1.0.8"
+    "websocket": "^1.0.8",
+    "mongoose": "*",
+    "connect-mongo": "*"
   },
   "devDependencies": {},
   "scripts": {
