@@ -88,11 +88,3 @@ module.exports = function (app) {
     }
   };
 };
-//module.exports = function (app) {
-//
-//    return {
-//        get: functions.routing(['profileById', 'profilesPerPage', 'profileFriends'], require('../models/profiles')(app.connectionPool)),
-//        post: functions.routing(['profileRegister', 'profileAuth'], require('../models/profiles')(app.connectionPool))
-//
-//    };
-//};

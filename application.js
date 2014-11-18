@@ -22,7 +22,8 @@ var conf = {
     db: 'test',
     host: 'localhost',
     port: 27017,  // optional, default: 27017
-    collection: 'mySessions' // optional, default: sessions
+    collection: 'mySessions', // optional, default: sessions
+    stringify: false
   },
   secret: '076ee61d63aa10a125ea872411e433b9'
 };

@@ -9,7 +9,7 @@ var express = require('express')
   , mongo = require('mongoose')
   , config = require('./config'),
     url = require("url");
-    
+
 
 
 var app = express()
@@ -110,7 +110,7 @@ app.get(/^\/docs(\/.*)?$/, function(req, res, next) {
 
 app.use(function(req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');  
+  res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
   res.header('Access-Control-Allow-Credentials', 'true');
   res.header('Access-Control-Allow-Headers', 'accept, origin, content-type, cookie');
   res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE');
