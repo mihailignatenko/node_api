@@ -71,7 +71,7 @@ function profileRegister(req, cb) {
                   });
                 });
                 connectionPool.getConnection(function (err, connection, sql) {
-                  connection.query("SELECT id FROM Profiles WHERE NickName = " + mysql.escape(req.body.NickName), req.body.NickName, function (err, rows, fields) {
+                  connection.query("SELECT id FROM Profiles WHERE NickName = " + NickName, req.body.NickName, function (err, rows, fields) {
                     process.nextTick(function () {
                       cb(null, rows);
                     });
