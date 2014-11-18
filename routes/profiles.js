@@ -46,15 +46,24 @@ function profileFriends(req, res) {
 }
 function profileRegister(req, res){
     model.profileRegister(req, function(err, data){
+      if(err){
+        res.send(err);
+      } else {
         res.send(data);
+      }
     });
 }
 function profileAuth(req, res){
     //console.log(req.body);
-    model.profileAuth(req.body.NickName, req.body.Password, req.session, function(err, data){        
-       res.send({auth: 'ok'}); 
-       req.session.auth = true;
-       req.session.save();
+    model.profileAuth(req.body.NickName, req.body.Password, req.session, function(err, data){
+      if(err){
+          res.send(401);
+          res.end(err);
+      } else {
+          res.send({auth: 'ok'});
+          req.session.auth = true;
+          req.session.save();
+      }
     });
 }
 
