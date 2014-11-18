@@ -4,16 +4,6 @@ var model;
 var functions = require('../functions');
 var randomString = functions.randomString;
 
-//function randomString(len, charSet) {
-//  charSet = charSet || 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-//  var randomString = '';
-//  for (var i = 0; i < len; i++) {
-//    var randomPoz = Math.floor(Math.random() * charSet.length);
-//    randomString += charSet.substring(randomPoz, randomPoz + 1);
-//  }
-//  return randomString;
-//}
-
 function nts(val) {
   if (typeof val === 'undefined') {
     return '';
@@ -26,7 +16,7 @@ function nts(val) {
 function profileById(req, res) {
   model.getProfileById(req.params.id, function (err, data) {
     if (err) {
-      res.send({'err': 'user not found'});
+      res.send(404, {'err': 'user not found'});
     } else {
       res.send(data);
     }
@@ -45,30 +35,40 @@ function profileFriends(req, res) {
     });
 }
 function profileRegister(req, res){
-    model.profileRegister(req, function(err, data){
-      if(err){
-        res.send(err);
+    model.profileRegister(req.body, function(err, data) {
+      if(err) {
+        res.send(500, {'err': err});
       } else {
-        res.send(data);
+        req.session.user = {
+          ID: data.ID,
+          NickName: req.body.NickName,
+          Role: 1 // default for just registered user
+        };
+        req.session.save();
+
+        res.send(200, data)
       }
     });
 }
-function profileAuth(req, res){
-    //console.log(req.body);
-    model.profileAuth(req.body.NickName, req.body.Password, req.session, function(err, data){
-      if(err){
-          res.send(401);
-          res.end(err);
-      } else {
-          res.send({auth: 'ok'});
-          req.session.auth = true;
-          req.session.save();
-      }
-    });
+function profileAuth(req, res) {
+  model.profileAuth(req.body.NickName, req.body.Password, function (err, data) {
+    if (err) {
+      res.send(401, {'ok': false, 'err': 'auth failed'})
+    } else {
+      req.session.user = {
+        ID: data.ID,
+        NickName: data.NickName,
+        Role: data.Role
+      };
+      req.session.save();
+
+      res.send(200, { 'ID': data.ID })
+    }
+  });
 }
 
 function profileFields(req, res){
-  model.profileFields(function(err, data){
+  model.profileFields(req, function(err, data){
     res.send(data);
   });
 }
